@@ -1,0 +1,1 @@
+import { Router } from 'express'; import profile from '../profile.js'; import activate from '../activate.js'; import updateAvatar from '../update-avatar.js'; const router=Router(); router.get('/profile',profile); router.post('/activate',activate); router.post('/update-avatar',updateAvatar); export default router;
