@@ -18,6 +18,10 @@
       "destination": "/purchase.html"
     },
     {
+      "source": "/api/:path*",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/profile",
       "destination": "/profile.html"
     },
