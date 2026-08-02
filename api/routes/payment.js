@@ -1,1 +1,0 @@
-import { Router } from 'express'; const router=Router(); router.post('/payment/webhook',(_req,res)=>res.status(501).json({success:false,message:'Подключите webhook выбранной платёжной системы'})); export default router;
