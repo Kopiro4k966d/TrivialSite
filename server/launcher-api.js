@@ -1,9 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import pool from './db.js';
-import { requireSession } from './auth.js';
+import pool, { databaseFailure } from './db.js';
+import { createLauncherTicket, requireSession } from './auth.js';
 import { publicUser, subscriptionInfo } from './subscription.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -33,42 +32,64 @@ function manifest() {
   };
 }
 
+function fail(res, error, message) {
+  const failure = databaseFailure(error, message);
+  return res.status(failure.status).json({ success: false, code: failure.code, message: failure.message });
+}
+
 export async function subscriptionCheck(req, res) {
-  if (req.method !== 'GET') return res.status(405).json({ success: false, message: 'Method not allowed' });
+  if (req.method !== 'GET') return res.status(405).json({ success: false, code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' });
   const session = requireSession(req, res); if (!session) return;
   try {
     const row = await loadUser(session);
-    if (!row) return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+    if (!row) return res.status(404).json({ success: false, code: 'USER_NOT_FOUND', message: 'Пользователь не найден' });
     return res.json({ success: true, user: publicUser(row), subscription: subscriptionInfo(row.subscription), manifest: manifest() });
   } catch (error) {
     console.error('subscription:', error);
-    return res.status(500).json({ success: false, message: 'Ошибка проверки подписки' });
+    return fail(res, error, 'Ошибка проверки подписки');
   }
 }
 
 export async function launcherSession(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
+  if (req.method !== 'POST') return res.status(405).json({ success: false, code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' });
   const session = requireSession(req, res); if (!session) return;
-  const hwid = String(req.body?.hwid || '').trim();
-  if (!/^[a-f0-9]{32,128}$/i.test(hwid)) return res.status(400).json({ success: false, message: 'Некорректный HWID' });
+  const hwid = String(req.body?.hwid || '').trim().toLowerCase();
+  if (!/^[a-f0-9]{32,128}$/.test(hwid)) return res.status(400).json({ success: false, code: 'INVALID_HWID', message: 'Некорректный HWID' });
+
   try {
     const row = await loadUser(session);
-    if (!row) return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+    if (!row) return res.status(404).json({ success: false, code: 'USER_NOT_FOUND', message: 'Пользователь не найден' });
     const sub = subscriptionInfo(row.subscription);
     if (!sub.active) return res.status(403).json({ success: false, code: 'SUBSCRIPTION_REQUIRED', message: 'Подписка не активна' });
-    if (row.hwid && row.hwid !== hwid) return res.status(403).json({ success: false, code: 'HWID_MISMATCH', message: 'Аккаунт привязан к другому устройству' });
-    if (!row.hwid) await pool.query('UPDATE users SET hwid=$1 WHERE id=$2 AND hwid IS NULL', [hwid, session.sub]);
-    const ticketPayload = `${session.sub}:${hwid}:${Date.now()}`;
-    const ticket = crypto.createHash('sha256').update(ticketPayload).digest('hex');
-    return res.json({ success: true, ticket, expiresIn: 300, user: publicUser({ ...row, hwid }), manifest: manifest() });
+
+    const bound = await pool.query(
+      `UPDATE users SET hwid=$1
+       WHERE id=$2 AND (hwid IS NULL OR LOWER(hwid)=LOWER($1))
+       RETURNING id,username,email,role,subscription,hwid,avatar,created_at`,
+      [hwid, session.sub]
+    );
+    if (!bound.rows.length) {
+      return res.status(403).json({ success: false, code: 'HWID_MISMATCH', message: 'Аккаунт привязан к другому устройству' });
+    }
+
+    const expiresAt = Date.now() + 5 * 60_000;
+    const ticket = createLauncherTicket({ userId: session.sub, hwid, expiresAt });
+    return res.json({
+      success: true,
+      ticket,
+      expiresIn: 300,
+      expiresAt: new Date(expiresAt).toISOString(),
+      user: publicUser(bound.rows[0]),
+      manifest: manifest()
+    });
   } catch (error) {
     console.error('launcher-session:', error);
-    return res.status(500).json({ success: false, message: 'Ошибка запуска сессии' });
+    return fail(res, error, 'Ошибка запуска сессии');
   }
 }
 
 export async function downloadLauncher(req, res) {
-  if (req.method !== 'GET') return res.status(405).json({ success: false, message: 'Method not allowed' });
+  if (req.method !== 'GET') return res.status(405).json({ success: false, code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' });
   const session = requireSession(req, res); if (!session) return;
   try {
     const row = await loadUser(session);
@@ -76,7 +97,7 @@ export async function downloadLauncher(req, res) {
     if (process.env.LAUNCHER_DOWNLOAD_URL) return res.redirect(302, process.env.LAUNCHER_DOWNLOAD_URL);
     const configured = process.env.LAUNCHER_FILE_PATH;
     const filePath = configured ? path.resolve(configured) : path.join(root, 'storage', 'launcher', 'TrivialLauncher.zip');
-    if (!fs.existsSync(filePath)) return res.status(503).json({ success: false, message: 'Сборка лаунчера ещё не опубликована' });
+    if (!fs.existsSync(filePath)) return res.status(503).json({ success: false, code: 'LAUNCHER_NOT_PUBLISHED', message: 'Сборка лаунчера ещё не опубликована' });
     const stat = fs.statSync(filePath);
     res.setHeader('Content-Type', 'application/zip');
     res.setHeader('Content-Length', String(stat.size));
@@ -85,12 +106,12 @@ export async function downloadLauncher(req, res) {
     return fs.createReadStream(filePath).pipe(res);
   } catch (error) {
     console.error('download-launcher:', error);
-    return res.status(500).json({ success: false, message: 'Ошибка скачивания' });
+    return fail(res, error, 'Ошибка скачивания');
   }
 }
 
 export async function clientManifest(req, res) {
-  if (req.method !== 'GET') return res.status(405).json({ success: false, message: 'Method not allowed' });
+  if (req.method !== 'GET') return res.status(405).json({ success: false, code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' });
   const session = requireSession(req, res); if (!session) return;
   try {
     const row = await loadUser(session);
@@ -98,6 +119,6 @@ export async function clientManifest(req, res) {
     return res.json({ success: true, manifest: manifest() });
   } catch (error) {
     console.error('manifest:', error);
-    return res.status(500).json({ success: false, message: 'Ошибка манифеста' });
+    return fail(res, error, 'Ошибка манифеста');
   }
 }

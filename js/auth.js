@@ -8,6 +8,14 @@ async function submit(path, payload) {
   return window.TrivialAPI.api(path, { method: 'POST', body: JSON.stringify(payload) });
 }
 
+function safeNextPage() {
+  const value = new URLSearchParams(location.search).get('next');
+  if (!value) return 'profile.html';
+  const decoded = value.trim().replace(/^\/+/, '');
+  if (!/^[a-z0-9_-]+\.html(?:[?#][^\s]*)?$/i.test(decoded)) return 'profile.html';
+  return decoded;
+}
+
 const signinForm = document.getElementById('signinForm');
 if (signinForm) signinForm.addEventListener('submit', async event => {
   event.preventDefault();
@@ -20,7 +28,7 @@ if (signinForm) signinForm.addEventListener('submit', async event => {
     const data = await submit('login', { username: signinForm.login.value.trim(), password: signinForm.password.value });
     window.TrivialAPI.saveSession(data);
     setStatus(status, 'Вход выполнен. Открываем профиль…', 'success');
-    setTimeout(() => location.href = 'profile.html', 300);
+    setTimeout(() => { location.href = safeNextPage(); }, 300);
   } catch (error) {
     setStatus(status, error.message, 'error');
     button.disabled = false;
@@ -37,6 +45,10 @@ if (signupForm) signupForm.addEventListener('submit', async event => {
     setStatus(status, 'Пароли не совпадают', 'error');
     return;
   }
+  if (signupForm.password.value.length < 8) {
+    setStatus(status, 'Пароль должен содержать минимум 8 символов', 'error');
+    return;
+  }
   button.disabled = true;
   button.textContent = 'Создаём…';
   setStatus(status, 'Создаём аккаунт…');
@@ -48,7 +60,7 @@ if (signupForm) signupForm.addEventListener('submit', async event => {
     });
     window.TrivialAPI.saveSession(data);
     setStatus(status, 'Аккаунт создан. Открываем профиль…', 'success');
-    setTimeout(() => location.href = 'profile.html', 300);
+    setTimeout(() => { location.href = 'profile.html'; }, 300);
   } catch (error) {
     setStatus(status, error.message, 'error');
     button.disabled = false;

@@ -1,2 +1,15 @@
 import crypto from 'node:crypto';
-export const generateKey=(days=30)=>{const part=()=>crypto.randomBytes(3).toString('hex').toUpperCase();return `TRIV-${part()}-${part()}-${Number(days)}D`;};
+
+const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+function group(length = 4) {
+  const bytes = crypto.randomBytes(length);
+  let value = '';
+  for (const byte of bytes) value += ALPHABET[byte % ALPHABET.length];
+  return value;
+}
+
+export function generateKey(days = 30) {
+  const duration = Math.max(1, Math.trunc(Number(days) || 30));
+  return `TRIV-${group()}-${group()}-${group()}-${duration}D`;
+}

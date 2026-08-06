@@ -1,5 +1,5 @@
 const $ = id => document.getElementById(id);
-const setText = (id, value) => { const el = $(id); if (el) el.textContent = value ?? '—'; };
+const setText = (id, value) => { const element = $(id); if (element) element.textContent = value ?? '—'; };
 const formatDate = value => {
   if (!value) return 'Не активна';
   const date = new Date(value);
@@ -26,6 +26,18 @@ function updateDownloadState(user) {
   }
 }
 
+function addAdminLink(user) {
+  if (!['creator', 'admin'].includes(String(user.role || '').toLowerCase())) return;
+  const nav = document.querySelector('.side-nav');
+  if (!nav || nav.querySelector('[data-admin-link]')) return;
+  const link = document.createElement('a');
+  link.href = 'admin-panel.html';
+  link.dataset.adminLink = '';
+  link.className = 'btn';
+  link.textContent = 'Админ-панель';
+  nav.appendChild(link);
+}
+
 async function loadProfile() {
   try {
     const data = await window.TrivialAPI.api('profile');
@@ -42,10 +54,11 @@ async function loadProfile() {
     const avatar = $('profileAvatar');
     if (avatar) avatar.src = user.avatar || 'img/logo.png';
     updateDownloadState(user);
+    addAdminLink(user);
     setText('profileLoadStatus', 'Аккаунт, подписка и загрузка лаунчера.');
   } catch (error) {
     setText('profileLoadStatus', error.message);
-    if (error.status === 401) location.replace('signin.html');
+    if (error.status === 401) location.replace('signin.html?next=profile.html');
   }
 }
 
@@ -60,14 +73,21 @@ document.querySelectorAll('[data-copy]').forEach(button => button.addEventListen
     await navigator.clipboard.writeText(value);
     const original = button.textContent;
     button.textContent = 'Скопировано';
-    setTimeout(() => button.textContent = original, 1200);
-  } catch { button.textContent = 'Не удалось'; }
+    setTimeout(() => { button.textContent = original; }, 1200);
+  } catch {
+    button.textContent = 'Не удалось';
+  }
 }));
 
 $('activateForm')?.addEventListener('submit', async event => {
   event.preventDefault();
   const status = $('activateStatus');
   const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  button.disabled = true;
+  button.textContent = 'Проверяем…';
+  status.textContent = 'Проверяем ключ…';
+  status.className = 'status-message';
   try {
     const data = await window.TrivialAPI.api('activate', { method: 'POST', body: JSON.stringify({ key: form.key.value.trim() }) });
     status.textContent = data.message;
@@ -77,6 +97,9 @@ $('activateForm')?.addEventListener('submit', async event => {
   } catch (error) {
     status.textContent = error.message;
     status.className = 'status-message error';
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Активировать';
   }
 });
 
@@ -84,14 +107,22 @@ $('avatarForm')?.addEventListener('submit', async event => {
   event.preventDefault();
   const form = event.currentTarget;
   const status = $('avatarStatus');
+  const button = form.querySelector('button[type="submit"]');
+  button.disabled = true;
   try {
     const data = await window.TrivialAPI.api('update-avatar', { method: 'POST', body: JSON.stringify({ avatar: form.avatar.value.trim() }) });
     $('profileAvatar').src = data.avatar || 'img/logo.png';
+    if (profileUser) {
+      profileUser.avatar = data.avatar || null;
+      window.TrivialAPI.saveSession({ user: profileUser });
+    }
     status.textContent = data.message;
     status.className = 'status-message success';
   } catch (error) {
     status.textContent = error.message;
     status.className = 'status-message error';
+  } finally {
+    button.disabled = false;
   }
 });
 
@@ -115,12 +146,14 @@ $('downloadLauncher')?.addEventListener('click', async () => {
     document.body.appendChild(link);
     link.click();
     link.remove();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) {
     $('downloadState').textContent = error.message;
   } finally {
-    button.disabled = false;
-    button.textContent = original;
+    const active = window.TrivialAPI.isSubscriptionActive(profileUser);
+    button.disabled = !active;
+    button.classList.toggle('is-disabled', !active);
+    button.textContent = active ? original : 'Нужна активная подписка';
   }
 });
 
