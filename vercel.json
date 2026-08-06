@@ -1,33 +1,22 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/signin",
-      "destination": "/signin.html"
-    },
-    {
-      "source": "/signup",
-      "destination": "/signup.html"
-    },
-    {
-      "source": "/purchase",
-      "destination": "/purchase.html"
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "/api/index.js"
-    },
-    {
-      "source": "/profile",
-      "destination": "/profile.html"
-    },
-    {
-      "source": "/public-offer",
-      "destination": "/public-offer.html"
-    }
+  "functions": {
+    "api/index.js": { "includeFiles": "storage/launcher/**" }
+  },
+  "routes": [
+    { "src": "/storage/.*", "status": 404 },
+    { "src": "/api/(.*)", "dest": "/api/index.js" },
+    { "handle": "filesystem" },
+    { "src": "/signin", "dest": "/signin.html" },
+    { "src": "/signup", "dest": "/signup.html" },
+    { "src": "/profile", "dest": "/profile.html" },
+    { "src": "/purchase", "dest": "/purchase.html" },
+    { "src": "/.*", "dest": "/index.html" }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+    ] }
   ]
 }

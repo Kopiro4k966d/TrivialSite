@@ -1,22 +1,25 @@
-import pg from "pg";
-
+import pg from 'pg';
 const { Pool } = pg;
 
-const connectionString =
-  process.env.POSTGRES_PRISMA_URL ||
-  process.env.POSTGRES_URL ||
-  process.env.DATABASE_URL;
+const connectionString = process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL || process.env.DATABASE_URL;
+const missingError = () => new Error('DATABASE_URL is not configured');
 
-if (!connectionString) {
-  throw new Error("Database connection string is missing");
+let pool;
+if (connectionString) {
+  const useSsl = process.env.DATABASE_SSL === 'true' || /sslmode=require/i.test(connectionString) || /neon\.tech|supabase\.co|render\.com/i.test(connectionString);
+  pool = new Pool({
+    connectionString,
+    ssl: useSsl ? { rejectUnauthorized: false } : false,
+    max: Number(process.env.DATABASE_POOL_SIZE || 5),
+    idleTimeoutMillis: 30_000,
+    connectionTimeoutMillis: 10_000
+  });
+} else {
+  pool = {
+    async query() { throw missingError(); },
+    async connect() { throw missingError(); },
+    async end() {}
+  };
 }
-
-const pool = new Pool({
-  connectionString,
-  ssl: {
-    rejectUnauthorized: false
-  },
-  max: 5
-});
 
 export default pool;

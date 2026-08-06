@@ -1,4 +1,5 @@
 (() => {
-  const username = localStorage.getItem('trivial_username');
-  if (!username && document.body.hasAttribute('data-auth-required')) location.replace('signin.html');
+  if (document.body.hasAttribute('data-auth-required') && !window.TrivialAPI?.token()) {
+    location.replace(`signin.html?next=${encodeURIComponent(location.pathname.split('/').pop() || 'profile.html')}`);
+  }
 })();
