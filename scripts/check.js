@@ -99,6 +99,27 @@ try {
     failed = true;
     console.error('Vercel API catch-all route is missing.');
   }
+
+  const routeList = vercel.routes || [];
+  const filesystemIndex = routeList.findIndex(route => route.handle === 'filesystem');
+  const catchAllIndex = routeList.findIndex(route => route.src === '/.*');
+  if (filesystemIndex === -1) {
+    failed = true;
+    console.error('Vercel filesystem handler is missing; CSS/JS/images would be swallowed by the 404 catch-all.');
+  } else if (catchAllIndex !== -1 && filesystemIndex > catchAllIndex) {
+    failed = true;
+    console.error('Vercel filesystem handler must run before the 404 catch-all.');
+  }
+
+  const htmlFiles = files.filter(file => file.endsWith('.html'));
+  for (const file of htmlFiles) {
+    const html = await readFile(file, 'utf8');
+    const relativeAsset = html.match(/(?:src|href)=["'](?:css|js|img)\//i);
+    if (relativeAsset) {
+      failed = true;
+      console.error(`Asset URLs must be root-absolute for clean routes: ${path.relative(root, file)}`);
+    }
+  }
 } catch (error) {
   failed = true;
   console.error(`Invalid Vercel/package configuration: ${error.message}`);

@@ -106,6 +106,10 @@ WHERE LOWER(username)=LOWER('your_username');
 - `/api/activate`, `/api/login`, `/api/profile`, `/api/subscription/check`, `/api/download/launcher` and the other endpoints still keep the same public URLs; `vercel.json` routes them internally to the single dispatcher.
 - Clean page URLs remain enabled through routing: `/profile`, `/signin`, `/signup`, `/purchase`, etc.
 
+## v9: исправление загрузки стилей на Vercel
+
+В `vercel.json` добавлен `handle: filesystem` до catch-all 404. Без него запросы к `/css/*`, `/js/*` и `/img/*` перехватывались маршрутом 404, поэтому сайт отображался как голый HTML без дизайна. Все локальные asset-ссылки также сделаны абсолютными (`/css/...`, `/js/...`, `/img/...`).
+
 ## Vercel Hobby: important for repositories updated through GitHub Upload files
 
 Version 8 uses one explicit Vercel Node build (`api-handler.js`) instead of automatic `/api/*.js` discovery. This is intentional: GitHub's web **Upload files** action does not delete old files that are no longer present in an uploaded archive. Old files left under `/api` can otherwise continue to count as separate Vercel Functions.

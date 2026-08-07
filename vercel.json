@@ -75,6 +75,9 @@
       "status": 404
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/api(?:/(.*))?",
       "dest": "/api-handler.js?__route=$1"
     },
