@@ -1,4 +1,15 @@
-# Trivial Client Site 4.0 — исправленная сборка
+# Trivial Client Site 5.0 — исправленная сборка
+
+## Исправление v5: HTML вместо ответа API
+
+Если браузер показывал в ошибке текст, начинающийся с `<!doctype html>...404`, запрос `/api/...` попадал на HTML-страницу 404 вместо Vercel Function. В v5:
+
+- для каждого используемого API-маршрута добавлен отдельный entrypoint в `api/`;
+- центральный `/api/index.js` оставлен как fallback;
+- маршрутизация чистых URL больше не зависит от `cleanUrls` вместе с `.html` destination;
+- прямые `/profile.html`, `/signin.html` и другие адреса перенаправляются на `/profile`, `/signin` и т. д.;
+- фронтенд больше не выводит сырой HTML 404 как текст ошибки.
+
 
 Сайт, API авторизации, лицензии, профиль, админ-панель и защищённая загрузка лаунчера.
 
@@ -10,11 +21,11 @@
 - миграция умеет нормализовать старые несовместимые типы `licenses.license_key`, `licenses.status` и `licenses.duration_days`;
 - активация ключа выполняется атомарно и проверяет, что ключ действительно помечен использованным;
 - добавлены понятные ответы для ошибок несовместимой/устаревшей схемы БД;
-- на Vercel включены clean URLs: `/profile`, `/signin`, `/signup`, `/purchase`, `/admin-panel`, `/public-offer`, `/payment-success`;
+- на Vercel чистые URL реализованы явной маршрутизацией: `/profile`, `/signin`, `/signup`, `/purchase`, `/admin-panel`, `/public-offer`, `/payment-success`;
 - все внутренние ссылки и редиректы переведены с `.html` на чистые URL;
 - локальный Express также перенаправляет `/profile.html` → `/profile` и `/index.html` → `/`;
 - добавлен отсутствовавший `.env.example`;
-- обновлена проверка проекта `npm run check` под clean URLs.
+- обновлена проверка проекта `npm run check` под чистые URL и прямые API entrypoint-файлы.
 
 ## Развёртывание на Vercel
 

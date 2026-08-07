@@ -63,5 +63,33 @@ if (internalHtmlRefs.length) {
   console.error(`Clean URL check failed in: ${internalHtmlRefs.join(', ')}`);
 }
 
+// Vercel routing regression checks.
+try {
+  const vercel = JSON.parse(await readFile(path.join(root, 'vercel.json'), 'utf8'));
+  if (vercel.cleanUrls === true) {
+    const serialized = JSON.stringify(vercel.rewrites || vercel.routes || []);
+    if (/\\.html/.test(serialized)) {
+      failed = true;
+      console.error('Vercel routing check failed: cleanUrls=true must not be combined with .html rewrite destinations.');
+    }
+  }
+  const apiEntrypoints = [
+    'api/activate.js', 'api/login.js', 'api/register.js', 'api/profile.js',
+    'api/update-avatar.js', 'api/create-key.js', 'api/stats.js', 'api/status.js',
+    'api/health.js', 'api/subscription/check.js', 'api/launcher/session.js',
+    'api/download/launcher.js', 'api/client/manifest.js'
+  ];
+  for (const entry of apiEntrypoints) {
+    if (!existing.has(entry)) {
+      failed = true;
+      console.error(`Missing Vercel API entrypoint: ${entry}`);
+    }
+  }
+} catch (error) {
+  failed = true;
+  console.error(`Invalid vercel.json: ${error.message}`);
+}
+
 if (failed) process.exit(1);
+
 console.log(`Checks passed: ${files.length} files.`);

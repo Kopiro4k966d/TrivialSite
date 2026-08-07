@@ -1,57 +1,68 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
   "functions": {
     "api/index.js": {
+      "includeFiles": "storage/launcher/**",
+      "maxDuration": 30
+    },
+    "api/download/launcher.js": {
       "includeFiles": "storage/launcher/**",
       "maxDuration": 30
     }
   },
   "routes": [
     {
-      "src": "/storage/.*",
+      "src": "/(.*)",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+        "X-Frame-Options": "DENY",
+        "Content-Security-Policy": "default-src 'self'; img-src 'self' https: data:; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+      },
+      "continue": true
+    },
+    {
+      "src": "/index\\.html",
+      "status": 308,
+      "headers": {
+        "Location": "/"
+      }
+    },
+    {
+      "src": "/(signin|signup|login|register|profile|purchase|payment-success|public-offer|admin-panel)\\.html",
+      "status": 308,
+      "headers": {
+        "Location": "/$1"
+      }
+    },
+    {
+      "src": "/storage(?:/.*)?",
       "status": 404
     },
     {
-      "src": "/server/.*",
+      "src": "/server(?:/.*)?",
       "status": 404
     },
     {
-      "src": "/database/.*",
+      "src": "/database(?:/.*)?",
       "status": 404
     },
     {
-      "src": "/scripts/.*",
+      "src": "/scripts(?:/.*)?",
       "status": 404
     },
     {
-      "src": "/package.json",
+      "src": "/(?:package\\.json|package-lock\\.json|vercel\\.json|server\\.js|\\.env(?:\\..*)?)",
       "status": 404
     },
     {
-      "src": "/package-lock.json",
-      "status": 404
-    },
-    {
-      "src": "/vercel.json",
-      "status": 404
-    },
-    {
-      "src": "/server.js",
-      "status": 404
-    },
-    {
-      "src": "/\\.env.*",
-      "status": 404
+      "handle": "filesystem"
     },
     {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
-    },
-    {
-      "handle": "filesystem"
     },
     {
       "src": "/",
@@ -97,33 +108,6 @@
       "src": "/.*",
       "dest": "/404.html",
       "status": 404
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self'; img-src 'self' https: data:; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
-        }
-      ]
     }
   ]
 }

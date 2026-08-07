@@ -34,10 +34,28 @@
     }
 
     const text = await response.text();
+    const contentType = String(response.headers.get('content-type') || '').toLowerCase();
+    const looksLikeHtml = contentType.includes('text/html') || /^\s*<!doctype\s+html/i.test(text) || /^\s*<html/i.test(text);
     let data = null;
     if (text) {
-      try { data = JSON.parse(text); }
-      catch { data = { success: false, message: text.slice(0, 300) }; }
+      if (looksLikeHtml) {
+        data = {
+          success: false,
+          code: response.status === 404 ? 'API_ROUTE_NOT_FOUND' : 'API_INVALID_RESPONSE',
+          message: response.status === 404
+            ? 'API-метод не найден на сервере. Загрузите актуальную версию проекта и сделайте Redeploy в Vercel.'
+            : `Сервер вернул HTML вместо JSON (HTTP ${response.status}). Проверьте маршрутизацию Vercel.`
+        };
+      } else {
+        try { data = JSON.parse(text); }
+        catch {
+          data = {
+            success: false,
+            code: 'API_INVALID_RESPONSE',
+            message: `Некорректный ответ API (HTTP ${response.status}).`
+          };
+        }
+      }
     }
 
     if (response.status === 401 && token) clearSession();

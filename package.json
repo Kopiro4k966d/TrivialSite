@@ -1,6 +1,6 @@
 {
   "name": "trivial-client-site",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
   "description": "Trivial Client website, subscription API and protected launcher download",
