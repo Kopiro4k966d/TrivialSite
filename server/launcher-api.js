@@ -9,7 +9,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 
 async function loadUser(session) {
-  const result = await pool.query('SELECT id,username,email,role,subscription,hwid,avatar,created_at FROM users WHERE id=$1 LIMIT 1', [session.sub]);
+  const result = await pool.query('SELECT id,username,email,role,subscription_until AS subscription,hwid,avatar,created_at FROM users WHERE id=$1 LIMIT 1', [session.sub]);
   return result.rows[0] || null;
 }
 
@@ -65,7 +65,7 @@ export async function launcherSession(req, res) {
     const bound = await pool.query(
       `UPDATE users SET hwid=$1
        WHERE id=$2 AND (hwid IS NULL OR LOWER(hwid)=LOWER($1))
-       RETURNING id,username,email,role,subscription,hwid,avatar,created_at`,
+       RETURNING id,username,email,role,subscription_until AS subscription,hwid,avatar,created_at`,
       [hwid, session.sub]
     );
     if (!bound.rows.length) {

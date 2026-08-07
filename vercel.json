@@ -1,6 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
   "functions": {
     "api/index.js": {
       "includeFiles": "storage/launcher/**",
@@ -64,12 +66,28 @@
       "dest": "/signup.html"
     },
     {
+      "src": "/login",
+      "dest": "/login.html"
+    },
+    {
+      "src": "/register",
+      "dest": "/register.html"
+    },
+    {
       "src": "/profile",
       "dest": "/profile.html"
     },
     {
       "src": "/purchase",
       "dest": "/purchase.html"
+    },
+    {
+      "src": "/payment-success",
+      "dest": "/payment-success.html"
+    },
+    {
+      "src": "/public-offer",
+      "dest": "/public-offer.html"
     },
     {
       "src": "/admin-panel",

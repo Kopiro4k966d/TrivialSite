@@ -12,7 +12,7 @@ export default async function login(req, res) {
   if (!loginValue || !password) return res.status(400).json({ success: false, code: 'FIELDS_REQUIRED', message: 'Заполните все поля' });
   try {
     const result = await pool.query(
-      'SELECT id, username, email, password, role, subscription, hwid, avatar, created_at FROM users WHERE LOWER(username)=LOWER($1) OR LOWER(email)=LOWER($1) LIMIT 1',
+      'SELECT id, username, email, password, role, subscription_until AS subscription, hwid, avatar, created_at FROM users WHERE LOWER(username)=LOWER($1) OR LOWER(email)=LOWER($1) LIMIT 1',
       [loginValue]
     );
     const row = result.rows[0];

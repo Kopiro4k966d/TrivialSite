@@ -10,10 +10,16 @@ async function submit(path, payload) {
 
 function safeNextPage() {
   const value = new URLSearchParams(location.search).get('next');
-  if (!value) return 'profile.html';
-  const decoded = value.trim().replace(/^\/+/, '');
-  if (!/^[a-z0-9_-]+\.html(?:[?#][^\s]*)?$/i.test(decoded)) return 'profile.html';
-  return decoded;
+  if (!value) return '/profile';
+  try {
+    const target = new URL(value, location.origin);
+    if (target.origin !== location.origin) return '/profile';
+    const allowed = new Set(['/', '/profile', '/purchase', '/admin-panel', '/payment-success', '/public-offer']);
+    if (!allowed.has(target.pathname)) return '/profile';
+    return `${target.pathname}${target.search}${target.hash}`;
+  } catch {
+    return '/profile';
+  }
 }
 
 const signinForm = document.getElementById('signinForm');
@@ -60,7 +66,7 @@ if (signupForm) signupForm.addEventListener('submit', async event => {
     });
     window.TrivialAPI.saveSession(data);
     setStatus(status, 'Аккаунт создан. Открываем профиль…', 'success');
-    setTimeout(() => { location.href = 'profile.html'; }, 300);
+    setTimeout(() => { location.href = '/profile'; }, 300);
   } catch (error) {
     setStatus(status, error.message, 'error');
     button.disabled = false;

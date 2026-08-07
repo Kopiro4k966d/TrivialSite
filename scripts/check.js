@@ -29,18 +29,38 @@ for (const file of files.filter(file => file.endsWith('.js'))) {
 
 const existing = new Set(files.map(file => path.relative(root, file).replaceAll('\\', '/')));
 const attrPattern = /(?:src|href)="([^"]+)"/g;
+
+function staticCandidate(ref) {
+  const clean = ref.split(/[?#]/)[0];
+  if (!clean || clean === '/') return 'index.html';
+  const normalized = clean.replace(/^\//, '');
+  if (existing.has(normalized)) return normalized;
+  if (!path.extname(normalized) && existing.has(`${normalized}.html`)) return `${normalized}.html`;
+  return normalized;
+}
+
 for (const file of files.filter(file => file.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
   for (const match of html.matchAll(attrPattern)) {
     const ref = match[1];
     if (/^(?:https?:|mailto:|#|data:|javascript:)/i.test(ref)) continue;
-    const clean = ref.split(/[?#]/)[0].replace(/^\//, '');
-    if (!clean) continue;
-    if (!existing.has(clean)) {
+    const candidate = staticCandidate(ref);
+    if (!existing.has(candidate)) {
       failed = true;
-      console.error(`Missing asset: ${path.relative(root, file)} -> ${ref}`);
+      console.error(`Missing asset/page: ${path.relative(root, file)} -> ${ref}`);
     }
   }
+}
+
+const internalHtmlRefs = [];
+for (const file of files.filter(file => /\.(?:html|js)$/i.test(file))) {
+  const content = await readFile(file, 'utf8');
+  const matches = content.match(/(?:href\s*=\s*["']|location(?:\.href|\.replace)?\s*[=(]\s*["'`])[^"'`]*\.html/gi);
+  if (matches) internalHtmlRefs.push(path.relative(root, file));
+}
+if (internalHtmlRefs.length) {
+  failed = true;
+  console.error(`Clean URL check failed in: ${internalHtmlRefs.join(', ')}`);
 }
 
 if (failed) process.exit(1);

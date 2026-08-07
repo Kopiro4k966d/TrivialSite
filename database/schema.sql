@@ -1,6 +1,6 @@
--- Trivial Site schema v3. Safe to run repeatedly on PostgreSQL.
+-- Trivial Site schema v4. Safe to run repeatedly on PostgreSQL.
 BEGIN;
-SELECT pg_advisory_xact_lock(hashtext('trivial-site-schema-v3'));
+SELECT pg_advisory_xact_lock(hashtext('trivial-site-schema-v4'));
 
 CREATE TABLE IF NOT EXISTS users (
   id BIGSERIAL PRIMARY KEY,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(160) NOT NULL,
   password TEXT NOT NULL,
   role VARCHAR(24) NOT NULL DEFAULT 'user',
-  subscription TIMESTAMPTZ NULL,
+  subscription_until TIMESTAMPTZ NULL,
   hwid VARCHAR(128) NULL,
   avatar TEXT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -18,7 +18,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS username VARCHAR(24);
 ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR(160);
 ALTER TABLE users ADD COLUMN IF NOT EXISTS password TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(24) DEFAULT 'user';
-ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription TIMESTAMPTZ NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_until TIMESTAMPTZ NULL;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS hwid VARCHAR(128) NULL;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar TEXT NULL;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
@@ -30,6 +30,51 @@ ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval('users_id_seq');
 SELECT setval('users_id_seq', GREATEST(COALESCE((SELECT MAX(id) FROM users), 0) + 1, 1), false);
 CREATE UNIQUE INDEX IF NOT EXISTS users_username_lower_uq ON users (LOWER(username));
 CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_uq ON users (LOWER(email));
+CREATE INDEX IF NOT EXISTS users_subscription_until_idx ON users(subscription_until);
+
+-- Compatibility with older builds that stored expiry in users.subscription.
+DO $$
+DECLARE
+  item RECORD;
+  raw_value TEXT;
+  epoch_value DOUBLE PRECISION;
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema=current_schema() AND table_name='users' AND column_name='subscription'
+  ) THEN
+    BEGIN
+      EXECUTE 'ALTER TABLE users ALTER COLUMN subscription DROP NOT NULL';
+    EXCEPTION WHEN OTHERS THEN
+      NULL;
+    END;
+
+    FOR item IN EXECUTE
+      'SELECT id, subscription::text AS raw_value FROM users WHERE subscription_until IS NULL AND subscription IS NOT NULL'
+    LOOP
+      raw_value := BTRIM(item.raw_value);
+      IF raw_value IS NULL OR raw_value = '' OR LOWER(raw_value) IN ('null','false','f','inactive','none') THEN
+        CONTINUE;
+      END IF;
+
+      BEGIN
+        IF raw_value ~ '^[0-9]+([.][0-9]+)?$' THEN
+          epoch_value := raw_value::double precision;
+          IF epoch_value > 100000000000 THEN
+            epoch_value := epoch_value / 1000.0;
+          END IF;
+          IF epoch_value > 1000000000 THEN
+            UPDATE users SET subscription_until=to_timestamp(epoch_value) WHERE id=item.id;
+          END IF;
+        ELSE
+          UPDATE users SET subscription_until=raw_value::timestamptz WHERE id=item.id;
+        END IF;
+      EXCEPTION WHEN OTHERS THEN
+        NULL;
+      END;
+    END LOOP;
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS licenses (
   id BIGSERIAL PRIMARY KEY,
@@ -50,6 +95,68 @@ ALTER TABLE licenses ADD COLUMN IF NOT EXISTS used_by BIGINT NULL;
 ALTER TABLE licenses ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
 ALTER TABLE licenses ADD COLUMN IF NOT EXISTS used_at TIMESTAMPTZ NULL;
 
+-- Normalize incompatible legacy column types.
+DO $$
+DECLARE column_type TEXT;
+BEGIN
+  SELECT data_type INTO column_type
+  FROM information_schema.columns
+  WHERE table_schema=current_schema() AND table_name='licenses' AND column_name='license_key';
+  IF column_type IS NOT NULL AND column_type NOT IN ('character varying','character','text') THEN
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema=current_schema() AND table_name='licenses' AND column_name='license_key_legacy_v4'
+    ) THEN
+      ALTER TABLE licenses RENAME COLUMN license_key TO license_key_legacy_v4;
+    ELSE
+      ALTER TABLE licenses DROP COLUMN license_key;
+    END IF;
+    ALTER TABLE licenses ADD COLUMN license_key VARCHAR(96);
+    UPDATE licenses SET license_key=UPPER(BTRIM(license_key_legacy_v4::text)) WHERE license_key_legacy_v4 IS NOT NULL;
+  END IF;
+
+  SELECT data_type INTO column_type
+  FROM information_schema.columns
+  WHERE table_schema=current_schema() AND table_name='licenses' AND column_name='status';
+  IF column_type IS NOT NULL AND column_type NOT IN ('character varying','character','text') THEN
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema=current_schema() AND table_name='licenses' AND column_name='status_legacy_v4'
+    ) THEN
+      ALTER TABLE licenses RENAME COLUMN status TO status_legacy_v4;
+    ELSE
+      ALTER TABLE licenses DROP COLUMN status;
+    END IF;
+    ALTER TABLE licenses ADD COLUMN status VARCHAR(16) DEFAULT 'unused';
+    UPDATE licenses
+    SET status=CASE
+      WHEN LOWER(BTRIM(status_legacy_v4::text)) IN ('1','true','t','yes','used','redeemed','activated') THEN 'used'
+      ELSE 'unused'
+    END;
+  END IF;
+
+  SELECT data_type INTO column_type
+  FROM information_schema.columns
+  WHERE table_schema=current_schema() AND table_name='licenses' AND column_name='duration_days';
+  IF column_type IS NOT NULL AND column_type NOT IN ('smallint','integer','bigint','numeric','decimal') THEN
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema=current_schema() AND table_name='licenses' AND column_name='duration_days_legacy_v4'
+    ) THEN
+      ALTER TABLE licenses RENAME COLUMN duration_days TO duration_days_legacy_v4;
+    ELSE
+      ALTER TABLE licenses DROP COLUMN duration_days;
+    END IF;
+    ALTER TABLE licenses ADD COLUMN duration_days INTEGER DEFAULT 30;
+    UPDATE licenses
+    SET duration_days=CASE
+      WHEN BTRIM(duration_days_legacy_v4::text) ~ '^[0-9]+$'
+        THEN LEAST(3650, GREATEST(1, BTRIM(duration_days_legacy_v4::text)::integer))
+      ELSE 30
+    END;
+  END IF;
+END $$;
+
 DO $$
 BEGIN
   IF EXISTS (
@@ -63,7 +170,7 @@ BEGIN
     SELECT 1 FROM information_schema.columns
     WHERE table_schema=current_schema() AND table_name='licenses' AND column_name='duration'
   ) THEN
-    EXECUTE 'UPDATE licenses SET duration_days=CASE WHEN BTRIM("duration"::text) ~ ''^[0-9]+$'' THEN GREATEST(1, BTRIM("duration"::text)::integer) ELSE 30 END WHERE duration_days IS NULL';
+    EXECUTE 'UPDATE licenses SET duration_days=CASE WHEN BTRIM("duration"::text) ~ ''^[0-9]+$'' THEN LEAST(3650, GREATEST(1, BTRIM("duration"::text)::integer)) ELSE 30 END WHERE duration_days IS NULL';
   END IF;
 
   IF EXISTS (
@@ -82,6 +189,7 @@ UPDATE licenses SET status=LOWER(BTRIM(status)) WHERE status IS NOT NULL;
 UPDATE licenses SET status='unused' WHERE status IS NULL OR BTRIM(status)='' OR status IN ('new','available','active','false','0');
 UPDATE licenses SET status='used' WHERE status IN ('true','1','redeemed','activated');
 UPDATE licenses SET duration_days=30 WHERE duration_days IS NULL OR duration_days < 1;
+UPDATE licenses SET duration_days=3650 WHERE duration_days > 3650;
 UPDATE licenses SET created_at=NOW() WHERE created_at IS NULL;
 
 WITH ranked AS (

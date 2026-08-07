@@ -18,7 +18,7 @@ export default async function register(req, res) {
     if (exists.rows.length) return res.status(409).json({ success: false, code: 'ACCOUNT_EXISTS', message: 'Логин или e-mail уже используется' });
     const hash = await bcrypt.hash(password, 12);
     const result = await pool.query(
-      "INSERT INTO users (username,email,password,role,subscription) VALUES ($1,$2,$3,'user',NULL) RETURNING id,username,email,role,subscription,hwid,avatar,created_at",
+      "INSERT INTO users (username,email,password,role,subscription_until) VALUES ($1,$2,$3,'user',NULL) RETURNING id,username,email,role,subscription_until AS subscription,hwid,avatar,created_at",
       [username, email, hash]
     );
     const row = result.rows[0];

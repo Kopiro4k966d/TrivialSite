@@ -31,7 +31,7 @@ function addAdminLink(user) {
   const nav = document.querySelector('.side-nav');
   if (!nav || nav.querySelector('[data-admin-link]')) return;
   const link = document.createElement('a');
-  link.href = 'admin-panel.html';
+  link.href = '/admin-panel';
   link.dataset.adminLink = '';
   link.className = 'btn';
   link.textContent = 'Админ-панель';
@@ -58,13 +58,13 @@ async function loadProfile() {
     setText('profileLoadStatus', 'Аккаунт, подписка и загрузка лаунчера.');
   } catch (error) {
     setText('profileLoadStatus', error.message);
-    if (error.status === 401) location.replace('signin.html?next=profile.html');
+    if (error.status === 401) location.replace('/signin?next=/profile');
   }
 }
 
 $('logoutButton')?.addEventListener('click', () => {
   window.TrivialAPI.clearSession();
-  location.href = 'signin.html';
+  location.href = '/signin';
 });
 
 document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {

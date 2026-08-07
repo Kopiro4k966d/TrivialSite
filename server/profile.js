@@ -6,7 +6,7 @@ export default async function profile(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ success: false, code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' });
   const session = requireSession(req, res); if (!session) return;
   try {
-    const result = await pool.query('SELECT id,username,email,role,subscription,created_at,hwid,avatar FROM users WHERE id=$1 LIMIT 1', [session.sub]);
+    const result = await pool.query('SELECT id,username,email,role,subscription_until AS subscription,created_at,hwid,avatar FROM users WHERE id=$1 LIMIT 1', [session.sub]);
     if (!result.rows.length) return res.status(404).json({ success: false, code: 'USER_NOT_FOUND', message: 'Пользователь не найден' });
     return res.json({ success: true, user: publicUser(result.rows[0]) });
   } catch (error) {

@@ -13,7 +13,7 @@ export default async function stats(req, res) {
 
     const [users, active, keys] = await Promise.all([
       pool.query('SELECT COUNT(*)::int count FROM users'),
-      pool.query('SELECT COUNT(*)::int count FROM users WHERE subscription > NOW()'),
+      pool.query('SELECT COUNT(*)::int count FROM users WHERE subscription_until > NOW()'),
       pool.query("SELECT COUNT(*)::int count FROM licenses WHERE status='unused'")
     ]);
     return res.json({

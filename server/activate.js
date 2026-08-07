@@ -23,17 +23,20 @@ export default async function activate(req, res) {
     const licenseResult = await client.query(
       `SELECT id,license_key,status,duration_days
        FROM licenses
-       WHERE license_key=$1
+       WHERE UPPER(BTRIM(license_key))=$1
        FOR UPDATE`,
       [key]
     );
     const license = licenseResult.rows[0];
-    if (!license || String(license.status).toLowerCase() !== 'unused') {
+    if (!license || String(license.status || '').trim().toLowerCase() !== 'unused') {
       await client.query('ROLLBACK');
       return res.status(400).json({ success: false, code: 'KEY_INVALID_OR_USED', message: 'Ключ недействителен или уже использован' });
     }
 
-    const userResult = await client.query('SELECT id,subscription FROM users WHERE id=$1 FOR UPDATE', [session.sub]);
+    const userResult = await client.query(
+      'SELECT id,subscription_until FROM users WHERE id=$1 FOR UPDATE',
+      [session.sub]
+    );
     const user = userResult.rows[0];
     if (!user) {
       await client.query('ROLLBACK');
@@ -41,22 +44,32 @@ export default async function activate(req, res) {
     }
 
     const durationDays = Math.max(1, Math.min(3650, Number(license.duration_days) || 30));
-    const current = subscriptionInfo(user.subscription);
+    const current = subscriptionInfo(user.subscription_until);
     const base = current.active ? new Date(current.until) : new Date();
     base.setUTCDate(base.getUTCDate() + durationDays);
+    const subscriptionUntil = base.toISOString();
 
-    await client.query('UPDATE users SET subscription=$1 WHERE id=$2', [base.toISOString(), session.sub]);
-    await client.query(
-      "UPDATE licenses SET status='used', used_by=$1, used_at=NOW() WHERE id=$2 AND status='unused'",
+    await client.query('UPDATE users SET subscription_until=$1 WHERE id=$2', [subscriptionUntil, session.sub]);
+    const used = await client.query(
+      `UPDATE licenses
+       SET status='used', used_by=$1, used_at=NOW()
+       WHERE id=$2 AND LOWER(BTRIM(status))='unused'
+       RETURNING id`,
       [session.sub, license.id]
     );
+
+    if (!used.rowCount) {
+      await client.query('ROLLBACK');
+      return res.status(409).json({ success: false, code: 'KEY_ALREADY_USED', message: 'Ключ уже был активирован другим запросом' });
+    }
+
     await client.query('COMMIT');
 
     return res.json({
       success: true,
       message: `Ключ активирован на ${durationDays} дн.`,
       duration: durationDays,
-      subscription_until: base.toISOString()
+      subscription_until: subscriptionUntil
     });
   } catch (error) {
     if (client) await client.query('ROLLBACK').catch(() => {});

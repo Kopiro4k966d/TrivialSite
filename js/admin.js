@@ -24,13 +24,13 @@
       const profile = await window.TrivialAPI.api('profile');
       const role = String(profile.user.role || '').toLowerCase();
       if (!['creator', 'admin'].includes(role)) {
-        location.replace('profile.html');
+        location.replace('/profile');
         return;
       }
       await loadStats();
     } catch (error) {
       setStatus(error.message, 'error');
-      if (error.status === 401) location.replace('signin.html?next=admin-panel.html');
+      if (error.status === 401) location.replace('/signin?next=/admin-panel');
     }
   }
 

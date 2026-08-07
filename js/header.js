@@ -18,6 +18,6 @@
   const accountLink = document.querySelector('[data-account-link]');
   if (accountLink && user?.username) {
     accountLink.textContent = user.username;
-    accountLink.href = 'profile.html';
+    accountLink.href = '/profile';
   }
 })();

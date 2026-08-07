@@ -17,6 +17,17 @@ for (const blocked of ['/server', '/database', '/scripts']) {
   app.use(blocked, (_req, res) => res.status(404).send('Not found'));
 }
 app.get(['/package.json', '/package-lock.json', '/vercel.json', '/server.js', '/.env', '/.env.example'], (_req, res) => res.status(404).send('Not found'));
+
+// Keep local development URLs identical to Vercel clean URLs.
+// /profile.html -> /profile, /index.html -> /
+app.use((req, res, next) => {
+  if (!['GET', 'HEAD'].includes(req.method) || !req.path.toLowerCase().endsWith('.html')) return next();
+  const cleanPath = req.path.toLowerCase() === '/index.html' ? '/' : req.path.slice(0, -5);
+  const queryIndex = req.originalUrl.indexOf('?');
+  const query = queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : '';
+  return res.redirect(308, `${cleanPath}${query}`);
+});
+
 app.use(express.static(root, {
   index: 'index.html',
   extensions: ['html'],

@@ -65,7 +65,7 @@ export function databaseFailure(error, fallbackMessage = 'Ошибка базы 
       message: 'У пользователя базы данных нет прав на миграцию. Выполните database/schema.sql владельцем БД или отключите AUTO_MIGRATE.'
     };
   }
-  if (['42P01', '42703', '42804', '23502'].includes(code)) {
+  if (['42P01', '42703', '42804', '42883', '22P02', '22007', '22008', '23502'].includes(code)) {
     return {
       status: 503,
       code: 'DATABASE_SCHEMA_ERROR',

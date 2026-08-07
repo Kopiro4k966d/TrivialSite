@@ -8,7 +8,7 @@
   const links = {
     week: 'https://funpay.com/lots/offer?id=68733469',
     month: 'https://funpay.com/lots/offer?id=73921141',
-    quarter: 'payment-success.html?plan=quarter'
+    quarter: '/payment-success?plan=quarter'
   };
   const supportUrl = '';
   let selected = { plan: 'month', name: 'Стандартный', price: '899 ₽' };
