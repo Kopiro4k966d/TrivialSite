@@ -68,26 +68,38 @@ try {
   const vercel = JSON.parse(await readFile(path.join(root, 'vercel.json'), 'utf8'));
   if (vercel.cleanUrls === true) {
     const serialized = JSON.stringify(vercel.rewrites || vercel.routes || []);
-    if (/\\.html/.test(serialized)) {
+    if (/\.html/.test(serialized)) {
       failed = true;
       console.error('Vercel routing check failed: cleanUrls=true must not be combined with .html rewrite destinations.');
     }
   }
-  const apiEntrypoints = [
-    'api/activate.js', 'api/login.js', 'api/register.js', 'api/profile.js',
-    'api/update-avatar.js', 'api/create-key.js', 'api/stats.js', 'api/status.js',
-    'api/health.js', 'api/subscription/check.js', 'api/launcher/session.js',
-    'api/download/launcher.js', 'api/client/manifest.js'
-  ];
-  for (const entry of apiEntrypoints) {
-    if (!existing.has(entry)) {
-      failed = true;
-      console.error(`Missing Vercel API entrypoint: ${entry}`);
-    }
+
+  const apiJsFiles = [...existing].filter(name => name.startsWith('api/') && name.endsWith('.js'));
+  if (apiJsFiles.length !== 1 || apiJsFiles[0] !== 'api/index.js') {
+    failed = true;
+    console.error(`Vercel Hobby check failed: expected exactly one API function (api/index.js), found: ${apiJsFiles.join(', ') || 'none'}`);
+  }
+
+  const fnConfig = Object.keys(vercel.functions || {});
+  if (fnConfig.length !== 1 || fnConfig[0] !== 'api/index.js') {
+    failed = true;
+    console.error(`Vercel functions config must contain only api/index.js, found: ${fnConfig.join(', ') || 'none'}`);
+  }
+
+  const serializedRoutes = JSON.stringify(vercel.routes || []);
+  if (!serializedRoutes.includes('/api/index.js?__route=$1')) {
+    failed = true;
+    console.error('Vercel API catch-all route is missing.');
+  }
+
+  const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
+  if (pkg.engines?.node !== '24.x') {
+    failed = true;
+    console.error(`Node.js version must be pinned to 24.x for Vercel; found ${pkg.engines?.node || 'none'}.`);
   }
 } catch (error) {
   failed = true;
-  console.error(`Invalid vercel.json: ${error.message}`);
+  console.error(`Invalid Vercel/package configuration: ${error.message}`);
 }
 
 if (failed) process.exit(1);

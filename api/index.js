@@ -37,12 +37,18 @@ function cors(req, res) {
   return allowed;
 }
 
-function routePath(req) {
-  const pathname = new URL(req.url || '/', 'http://local').pathname;
-  return pathname
+function normalizeRoute(value) {
+  return String(value || '')
     .replace(/^\/api(?:\/|$)/, '')
     .replace(/^\/+/, '')
     .replace(/\/+$/, '');
+}
+
+function routePath(req) {
+  const parsed = new URL(req.url || '/', 'http://local');
+  const explicitRoute = parsed.searchParams.get('__route') || req.query?.__route;
+  if (explicitRoute !== null && explicitRoute !== undefined) return normalizeRoute(explicitRoute);
+  return normalizeRoute(parsed.pathname);
 }
 
 async function parseBody(req) {

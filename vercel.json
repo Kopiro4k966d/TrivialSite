@@ -5,10 +5,6 @@
     "api/index.js": {
       "includeFiles": "storage/launcher/**",
       "maxDuration": 30
-    },
-    "api/download/launcher.js": {
-      "includeFiles": "storage/launcher/**",
-      "maxDuration": 30
     }
   },
   "routes": [
@@ -61,8 +57,8 @@
       "handle": "filesystem"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
+      "src": "/api(?:/(.*))?",
+      "dest": "/api/index.js?__route=$1"
     },
     {
       "src": "/",

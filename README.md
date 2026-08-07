@@ -98,3 +98,10 @@ WHERE LOWER(username)=LOWER('your_username');
 - `FABRIC_LOADER_VERSION`.
 
 Без `CLIENT_DOWNLOAD_URL` лаунчер может авторизоваться и получить профиль, но запуск клиента будет недоступен.
+
+## V7: Vercel Hobby / Node.js 24
+
+- `package.json` is pinned to `node: 24.x` so Vercel uses the current supported runtime.
+- All API endpoints are dispatched by a **single** `api/index.js` Vercel Function. This keeps the deployment below the Hobby plan limit of 12 Serverless Functions.
+- `/api/activate`, `/api/login`, `/api/profile`, `/api/subscription/check`, `/api/download/launcher` and the other endpoints still keep the same public URLs; `vercel.json` routes them internally to the single dispatcher.
+- Clean page URLs remain enabled through routing: `/profile`, `/signin`, `/signup`, `/purchase`, etc.
