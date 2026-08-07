@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import apiHandler from './api/index.js';
+import apiHandler from './api-handler.js';
 
 const app = express();
 const root = path.dirname(fileURLToPath(import.meta.url));

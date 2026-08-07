@@ -126,4 +126,25 @@ try {
 }
 
 if (failed) process.exit(1);
+
+
+// Validate every relative ESM import target. This catches deployment-time/runtime
+// crashes such as importing ../server/* from a handler that already lives in root.
+const relativeImportPattern = /(?:from\s+|import\s*\()(['"])(\.{1,2}\/[^'"]+)\1/g;
+for (const file of files.filter(file => file.endsWith('.js'))) {
+  const source = await readFile(file, 'utf8');
+  let match;
+  while ((match = relativeImportPattern.exec(source))) {
+    const target = path.resolve(path.dirname(file), match[2]);
+    try {
+      await stat(target);
+    } catch {
+      failed = true;
+      console.error(`Missing relative import: ${path.relative(root, file)} -> ${match[2]}`);
+    }
+  }
+}
+
+if (failed) process.exit(1);
+
 console.log(`Checks passed: ${files.length} files.`);

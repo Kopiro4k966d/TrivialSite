@@ -1,13 +1,13 @@
-import login from '../server/login.js';
-import register from '../server/register.js';
-import profile from '../server/profile.js';
-import updateAvatar from '../server/update-avatar.js';
-import activate from '../server/activate.js';
-import createKey from '../server/create-key.js';
-import stats from '../server/stats.js';
-import pool, { databaseConfigured, databaseFailure } from '../server/db.js';
-import { ensureSchema, schemaReady } from '../server/schema.js';
-import { clientManifest, downloadLauncher, launcherSession, subscriptionCheck } from '../server/launcher-api.js';
+import login from './server/login.js';
+import register from './server/register.js';
+import profile from './server/profile.js';
+import updateAvatar from './server/update-avatar.js';
+import activate from './server/activate.js';
+import createKey from './server/create-key.js';
+import stats from './server/stats.js';
+import pool, { databaseConfigured, databaseFailure } from './server/db.js';
+import { ensureSchema, schemaReady } from './server/schema.js';
+import { clientManifest, downloadLauncher, launcherSession, subscriptionCheck } from './server/launcher-api.js';
 
 const databaseRoutes = new Set([
   'login', 'register', 'profile', 'update-avatar', 'activate', 'create-key', 'stats',

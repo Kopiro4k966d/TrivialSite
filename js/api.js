@@ -49,10 +49,13 @@
       } else {
         try { data = JSON.parse(text); }
         catch {
+          const runtimeFailure = response.status >= 500 && /FUNCTION_(INVOCATION|THROTTLED)|server error|internal server error/i.test(text);
           data = {
             success: false,
-            code: 'API_INVALID_RESPONSE',
-            message: `Некорректный ответ API (HTTP ${response.status}).`
+            code: runtimeFailure ? 'API_RUNTIME_ERROR' : 'API_INVALID_RESPONSE',
+            message: runtimeFailure
+              ? `API-функция не запустилась (HTTP ${response.status}). Откройте Runtime Logs Vercel — это ошибка запуска серверного обработчика.`
+              : `Некорректный ответ API (HTTP ${response.status}).`
           };
         }
       }
