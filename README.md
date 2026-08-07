@@ -105,3 +105,9 @@ WHERE LOWER(username)=LOWER('your_username');
 - All API endpoints are dispatched by a **single** `api/index.js` Vercel Function. This keeps the deployment below the Hobby plan limit of 12 Serverless Functions.
 - `/api/activate`, `/api/login`, `/api/profile`, `/api/subscription/check`, `/api/download/launcher` and the other endpoints still keep the same public URLs; `vercel.json` routes them internally to the single dispatcher.
 - Clean page URLs remain enabled through routing: `/profile`, `/signin`, `/signup`, `/purchase`, etc.
+
+## Vercel Hobby: important for repositories updated through GitHub Upload files
+
+Version 8 uses one explicit Vercel Node build (`api-handler.js`) instead of automatic `/api/*.js` discovery. This is intentional: GitHub's web **Upload files** action does not delete old files that are no longer present in an uploaded archive. Old files left under `/api` can otherwise continue to count as separate Vercel Functions.
+
+The `vercel.json` in this package explicitly builds only `api-handler.js` as the backend function, so leftover historical `/api/*.js` files are not build targets. For a clean repository, delete the old `/api` directory entirely after uploading this version.

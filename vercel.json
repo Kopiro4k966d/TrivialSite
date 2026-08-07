@@ -1,12 +1,33 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "storage/launcher/**",
-      "maxDuration": 30
+  "builds": [
+    {
+      "src": "api-handler.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "storage/launcher/**"
+        ]
+      }
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "js/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "img/**",
+      "use": "@vercel/static"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/(.*)",
@@ -50,15 +71,12 @@
       "status": 404
     },
     {
-      "src": "/(?:package\\.json|package-lock\\.json|vercel\\.json|server\\.js|\\.env(?:\\..*)?)",
+      "src": "/(?:package\\.json|package-lock\\.json|vercel\\.json|server\\.js|api-handler\\.js|\\.env(?:\\..*)?)",
       "status": 404
     },
     {
-      "handle": "filesystem"
-    },
-    {
       "src": "/api(?:/(.*))?",
-      "dest": "/api/index.js?__route=$1"
+      "dest": "/api-handler.js?__route=$1"
     },
     {
       "src": "/",

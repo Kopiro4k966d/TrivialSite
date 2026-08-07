@@ -63,39 +63,41 @@ if (internalHtmlRefs.length) {
   console.error(`Clean URL check failed in: ${internalHtmlRefs.join(', ')}`);
 }
 
-// Vercel routing regression checks.
 try {
   const vercel = JSON.parse(await readFile(path.join(root, 'vercel.json'), 'utf8'));
-  if (vercel.cleanUrls === true) {
-    const serialized = JSON.stringify(vercel.rewrites || vercel.routes || []);
-    if (/\.html/.test(serialized)) {
-      failed = true;
-      console.error('Vercel routing check failed: cleanUrls=true must not be combined with .html rewrite destinations.');
-    }
-  }
-
-  const apiJsFiles = [...existing].filter(name => name.startsWith('api/') && name.endsWith('.js'));
-  if (apiJsFiles.length !== 1 || apiJsFiles[0] !== 'api/index.js') {
-    failed = true;
-    console.error(`Vercel Hobby check failed: expected exactly one API function (api/index.js), found: ${apiJsFiles.join(', ') || 'none'}`);
-  }
-
-  const fnConfig = Object.keys(vercel.functions || {});
-  if (fnConfig.length !== 1 || fnConfig[0] !== 'api/index.js') {
-    failed = true;
-    console.error(`Vercel functions config must contain only api/index.js, found: ${fnConfig.join(', ') || 'none'}`);
-  }
-
-  const serializedRoutes = JSON.stringify(vercel.routes || []);
-  if (!serializedRoutes.includes('/api/index.js?__route=$1')) {
-    failed = true;
-    console.error('Vercel API catch-all route is missing.');
-  }
-
   const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
+
   if (pkg.engines?.node !== '24.x') {
     failed = true;
     console.error(`Node.js version must be pinned to 24.x for Vercel; found ${pkg.engines?.node || 'none'}.`);
+  }
+
+  if ('functions' in vercel) {
+    failed = true;
+    console.error('Vercel config must not use automatic functions configuration in this deployment mode.');
+  }
+
+  const nodeBuilds = (vercel.builds || []).filter(build => build.use === '@vercel/node');
+  if (nodeBuilds.length !== 1 || nodeBuilds[0].src !== 'api-handler.js') {
+    failed = true;
+    console.error(`Vercel Hobby check failed: expected exactly one explicit @vercel/node build for api-handler.js; found ${JSON.stringify(nodeBuilds)}.`);
+  }
+
+  if (!existing.has('api-handler.js')) {
+    failed = true;
+    console.error('api-handler.js is missing.');
+  }
+
+  const apiJsFiles = [...existing].filter(name => name.startsWith('api/') && name.endsWith('.js'));
+  if (apiJsFiles.length) {
+    failed = true;
+    console.error(`Clean archive must not contain auto-detected /api JavaScript functions: ${apiJsFiles.join(', ')}`);
+  }
+
+  const serializedRoutes = JSON.stringify(vercel.routes || []);
+  if (!serializedRoutes.includes('/api-handler.js?__route=$1')) {
+    failed = true;
+    console.error('Vercel API catch-all route is missing.');
   }
 } catch (error) {
   failed = true;
@@ -103,5 +105,4 @@ try {
 }
 
 if (failed) process.exit(1);
-
 console.log(`Checks passed: ${files.length} files.`);
