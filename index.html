@@ -3,105 +3,154 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Trivial Client — современный Minecraft-клиент с аккуратным интерфейсом, гибкой настройкой и личным кабинетом.">
-  <meta name="theme-color" content="#090b10">
+  <meta name="description" content="Trivial Client — быстрый Minecraft-клиент с гибкой настройкой, аккуратным интерфейсом и личным кабинетом.">
+  <meta name="theme-color" content="#080a0d">
   <title>Trivial Client — официальный сайт</title>
   <link rel="icon" href="/img/logo.svg">
   <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="home-page">
+<body class="home-page home-v2">
   <header class="site-header home-header">
     <div class="header-shell">
-      <a class="brand" href="/" aria-label="Trivial — главная"><img src="/img/logo.svg" alt=""><span class="sr-only">Trivial</span></a>
+      <a class="brand" href="/" aria-label="Trivial — главная">
+        <img src="/img/logo.svg" alt=""><span>TRIVIAL</span>
+      </a>
       <nav class="nav-links" aria-label="Основная навигация">
-        <a href="#home" aria-current="page">Главная</a>
-        <a href="#features">Преимущества</a>
-        <a href="#faq">Частые вопросы</a>
+        <a href="#home" aria-current="page">Обзор</a>
+        <a href="#features">Возможности</a>
+        <a href="#start">Как начать</a>
+        <a href="#faq">FAQ</a>
       </nav>
       <div class="header-actions">
-        <a class="home-login" data-account-link href="/signin">Авторизация</a>
+        <a class="home-login" data-account-link href="/signin">Личный кабинет</a>
         <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="hero" id="home">
-      <div class="hero-media" aria-hidden="true"><img src="/img/hero-sunset.webp" alt=""></div>
-      <div class="hero-shade" aria-hidden="true"></div><div class="hero-noise" aria-hidden="true"></div>
-      <div class="container hero-layout">
-        <div class="hero-copy" data-reveal>
-          <h1><strong>Играй по своим</strong><br><span>правилам с Trivial.</span></h1>
-          <p>Чистый интерфейс, быстрый лаунчер и гибкая настройка клиента. Всё необходимое — без перегруженных меню и лишнего шума.</p>
-          <a class="hero-button" href="#features">Узнать больше</a>
+    <section class="hero hero-v2" id="home">
+      <div class="hero-glow hero-glow-a" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-b" aria-hidden="true"></div>
+      <div class="container hero-layout hero-layout-v2">
+        <div class="hero-copy hero-copy-v2" data-reveal>
+          <span class="hero-kicker"><i></i> Trivial Client · Release</span>
+          <h1>Больше контроля.<br><span>Меньше лишнего.</span></h1>
+          <p>Лёгкий клиент для комфортной игры: понятные настройки, быстрый запуск и визуальная система без перегруженного интерфейса.</p>
+          <div class="hero-actions-v2">
+            <a class="btn btn-primary" href="/purchase">Получить доступ</a>
+            <a class="btn hero-secondary" href="#features">Посмотреть возможности <span>↘</span></a>
+          </div>
+          <div class="hero-stats" aria-label="Статистика проекта" data-reveal>
+            <div class="stat-item"><strong data-counter="2529">0</strong><span>пользователей</span></div>
+            <div class="stat-item"><strong data-counter="38">0</strong><span>дней релиза</span></div>
+            <div class="stat-item"><strong data-counter="35">0</strong><span>обновлений</span></div>
+          </div>
         </div>
-        <div class="hero-stats" aria-label="Статистика проекта" data-reveal>
-          <div class="stat-item"><strong data-counter="2529">0</strong><span>Пользователей уже присоединились.</span></div>
-          <div class="stat-item"><strong data-counter="38">0</strong><span>Дней активного релиза.</span></div>
-          <div class="stat-item"><strong data-counter="35">0</strong><span>Стабильных обновлений.</span></div>
+
+        <div class="hero-showcase" data-reveal>
+          <div class="showcase-topline">
+            <span>TRIVIAL / CLIENT PREVIEW</span>
+            <span class="live-dot">ONLINE</span>
+          </div>
+          <div class="showcase-image">
+            <img src="/img/hero-sunset.webp" alt="Игровой мир Minecraft на закате">
+            <div class="showcase-hud hud-a"><small>FPS</small><strong>240</strong></div>
+            <div class="showcase-hud hud-b"><small>BUILD</small><strong>1.8.9</strong></div>
+          </div>
+          <div class="showcase-bottom">
+            <div><small>Состояние</small><strong>Стабильная версия</strong></div>
+            <span class="showcase-mark">T/01</span>
+          </div>
         </div>
       </div>
-      <div class="hero-scroll">Scroll</div>
+      <div class="hero-marquee" aria-hidden="true"><span>TRIVIAL CLIENT — PERFORMANCE — VISUALS — CONTROL — TRIVIAL CLIENT — PERFORMANCE — VISUALS — CONTROL —</span></div>
     </section>
 
-    <section class="features-section" id="features">
+    <section class="features-section features-v2" id="features">
       <div class="container">
-        <div class="section-head" data-reveal>
-          <span class="section-chip">Преимущества</span>
-          <h2>Узнайте, что выделяет Trivial среди остальных.</h2>
-          <p>Мы сфокусировались на ощущениях от игры: аккуратный визуал, понятные настройки, стабильные обновления и быстрая поддержка.</p>
+        <div class="section-head section-head-v2" data-reveal>
+          <div><span class="section-label">01 / Возможности</span><h2>Всё нужное собрано<br>в одном клиенте.</h2></div>
+          <p>Мы не пытаемся заполнить экран десятками элементов. Основной акцент — на скорости, управлении и удобстве в игре.</p>
         </div>
-        <div class="feature-grid">
-          <article class="feature-card" data-reveal><img src="/img/feature-night.webp" alt="Тёмный игровой пейзаж"><span class="card-index">/01</span><span class="card-icon">⌁</span><div class="feature-copy"><h3>Красивый внешний вид</h3><p>Оптимизированные визуальные модули делают геймплей живым и приятным.</p></div></article>
-          <article class="feature-card" data-reveal><img src="/img/feature-light.webp" alt="Светлый игровой пейзаж"><span class="card-index">/02</span><span class="card-icon">≋</span><div class="feature-copy"><h3>Гибкая настройка</h3><p>Включайте нужные функции и подстраивайте клиент под себя за пару минут.</p></div></article>
-          <article class="feature-card" data-reveal><img src="/img/feature-green.webp" alt="Зелёный игровой пейзаж"><span class="card-index">/03</span><span class="card-icon">↻</span><div class="feature-copy"><h3>Частые обновления</h3><p>Стабильный поток новых функций, исправлений и актуальных улучшений.</p></div></article>
-          <article class="feature-card" data-reveal><img src="/img/feature-ocean.webp" alt="Подводный игровой пейзаж"><span class="card-index">/04</span><span class="card-icon">◔</span><div class="feature-copy"><h3>Быстрая поддержка</h3><p>Команда на связи и готова помочь с аккаунтом, ключом и запуском клиента.</p></div></article>
+
+        <div class="feature-grid feature-grid-v2">
+          <article class="feature-card feature-main" data-reveal>
+            <img src="/img/feature-night.webp" alt="Ночной игровой пейзаж">
+            <div class="feature-top"><span>01</span><span>VISUAL</span></div>
+            <div class="feature-copy"><h3>Выразительный визуал</h3><p>Эффекты и оформление дополняют картинку, не превращая игру в перегруженный интерфейс.</p></div>
+          </article>
+          <article class="feature-card" data-reveal>
+            <img src="/img/feature-light.webp" alt="Светлый игровой пейзаж">
+            <div class="feature-top"><span>02</span><span>CONTROL</span></div>
+            <div class="feature-copy"><h3>Настройки под себя</h3><p>Соберите собственный набор функций и меняйте параметры за несколько кликов.</p></div>
+          </article>
+          <article class="feature-card" data-reveal>
+            <img src="/img/feature-green.webp" alt="Зелёный игровой пейзаж">
+            <div class="feature-top"><span>03</span><span>UPDATE</span></div>
+            <div class="feature-copy"><h3>Регулярные улучшения</h3><p>Исправления, оптимизация и новые возможности выходят без долгих пауз.</p></div>
+          </article>
+          <article class="feature-card feature-wide" data-reveal>
+            <img src="/img/feature-ocean.webp" alt="Подводный игровой пейзаж">
+            <div class="feature-top"><span>04</span><span>SUPPORT</span></div>
+            <div class="feature-copy"><h3>Поддержка без ожидания</h3><p>Если возник вопрос с аккаунтом, ключом или запуском — можно быстро получить помощь.</p></div>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="flow-section">
-      <div class="container flow-wrap">
-        <div class="flow-copy" data-reveal><span class="section-chip">Как начать</span><h2>От регистрации до запуска — три шага.</h2><p>Весь путь собран в одном аккаунте: вы создаёте профиль, активируете доступ и скачиваете лаунчер.</p><a class="btn btn-primary" href="/signup">Создать аккаунт</a></div>
-        <div class="steps">
-          <article class="step" data-reveal><span class="step-num">01</span><div><h3>Создайте аккаунт</h3><p>Регистрация занимает меньше минуты. Один аккаунт используется для профиля, подписки и лаунчера.</p></div></article>
-          <article class="step" data-reveal><span class="step-num">02</span><div><h3>Выберите период</h3><p>Оформите подходящий срок доступа и получите ключ после подтверждения покупки.</p></div></article>
-          <article class="step" data-reveal><span class="step-num">03</span><div><h3>Активируйте и запускайте</h3><p>Введите ключ в личном кабинете, скачайте защищённый лаунчер и переходите к игре.</p></div></article>
+    <section class="flow-section flow-v2" id="start">
+      <div class="container">
+        <div class="section-head section-head-v2 compact" data-reveal>
+          <div><span class="section-label">02 / Быстрый старт</span><h2>Три шага до запуска.</h2></div>
+          <p>Без сложной настройки и лишних действий: аккаунт, доступ, запуск.</p>
+        </div>
+        <div class="steps steps-v2">
+          <article class="step" data-reveal><span class="step-num">01</span><div><h3>Создайте профиль</h3><p>Один аккаунт используется для управления подпиской и доступа к лаунчеру.</p></div><span class="step-arrow">↗</span></article>
+          <article class="step" data-reveal><span class="step-num">02</span><div><h3>Активируйте доступ</h3><p>Выберите подходящий период и активируйте полученный ключ в личном кабинете.</p></div><span class="step-arrow">↗</span></article>
+          <article class="step" data-reveal><span class="step-num">03</span><div><h3>Скачайте лаунчер</h3><p>После активации загрузите лаунчер и переходите к игре.</p></div><span class="step-arrow">↗</span></article>
         </div>
       </div>
     </section>
 
-    <section class="pricing-teaser">
+    <section class="pricing-teaser pricing-v2">
       <div class="container">
         <div class="teaser-card" data-reveal>
-          <div><span class="section-chip">Доступ</span><h2>Выберите тариф<br>под свой ритм игры.</h2><p>7, 30 или 90 дней. Все основные функции клиента доступны на каждом тарифе.</p></div>
-          <div class="teaser-actions"><a class="btn" href="/signin">Войти</a><a class="btn btn-primary" href="/purchase">Смотреть тарифы</a></div>
+          <div class="teaser-copy-v2">
+            <span class="section-label">03 / Доступ</span>
+            <h2>Выберите срок.<br>Функции — те же.</h2>
+            <p>7, 30 или 90 дней доступа. На каждом тарифе доступен основной набор возможностей Trivial Client.</p>
+          </div>
+          <div class="teaser-side-v2">
+            <span class="price-note">от 7 дней</span>
+            <div class="teaser-actions"><a class="btn" href="/signin">Войти</a><a class="btn btn-primary" href="/purchase">Выбрать тариф</a></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="faq" id="faq">
+    <section class="faq faq-v2" id="faq">
       <div class="container faq-grid">
-        <div class="faq-intro" data-reveal><span class="section-chip">FAQ</span><h2>Частые вопросы</h2><p>Коротко о доступе, загрузке лаунчера и работе с аккаунтом.</p></div>
+        <div class="faq-intro" data-reveal><span class="section-label">04 / FAQ</span><h2>Ответы<br>на основные вопросы.</h2><p>Если нужного ответа нет, обратитесь в поддержку проекта.</p></div>
         <div class="faq-list" data-reveal>
-          <details><summary>Как получить доступ к клиенту?</summary><p>Зарегистрируйте аккаунт, выберите тариф на странице покупки и активируйте полученный ключ в профиле.</p></details>
-          <details><summary>Где скачать лаунчер?</summary><p>После активации подписки кнопка загрузки становится доступна во вкладке «Лаунчер» личного кабинета.</p></details>
-          <details><summary>Что делать при смене устройства?</summary><p>Напишите в поддержку. Привязка устройства управляется системой лицензирования и может потребовать сброса HWID.</p></details>
-          <details><summary>Куда обращаться по вопросам?</summary><p>Используйте раздел поддержки проекта и укажите логин аккаунта, чтобы мы быстрее нашли вашу подписку.</p></details>
+          <details><summary>Как получить доступ к клиенту?</summary><p>Создайте аккаунт, выберите тариф на странице покупки и активируйте полученный ключ в профиле.</p></details>
+          <details><summary>Где находится загрузка лаунчера?</summary><p>После активации подписки кнопка загрузки появится во вкладке «Лаунчер» личного кабинета.</p></details>
+          <details><summary>Что делать после смены компьютера?</summary><p>Обратитесь в поддержку. В некоторых случаях для нового устройства потребуется сброс привязки HWID.</p></details>
+          <details><summary>Куда писать, если что-то не работает?</summary><p>Свяжитесь с поддержкой и укажите логин аккаунта — так будет проще проверить доступ и подписку.</p></details>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer" id="support">
+  <footer class="site-footer">
     <div class="container footer-shell">
       <div class="footer-grid">
-        <div class="footer-brand"><a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>TRIVIAL</span></a><p>Современный клиент с аккуратной визуальной системой, личным кабинетом и защищённой загрузкой лаунчера.</p></div>
-        <div class="footer-column"><h3>Продукт</h3><a href="/purchase">Тарифы</a><a href="/profile">Скачать</a><a href="#features">Преимущества</a></div>
+        <div class="footer-brand"><a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>TRIVIAL</span></a><p>Игровой клиент с фокусом на скорости, понятной настройке и аккуратной визуальной системе.</p></div>
+        <div class="footer-column"><h3>Продукт</h3><a href="/purchase">Тарифы</a><a href="/profile">Скачать</a><a href="#features">Возможности</a></div>
         <div class="footer-column"><h3>Аккаунт</h3><a href="/signin">Войти</a><a href="/signup">Регистрация</a><a href="/profile">Профиль</a></div>
         <div class="footer-column"><h3>Документы</h3><a href="/public-offer">Публичная оферта</a><a href="/public-offer#privacy">Конфиденциальность</a></div>
       </div>
-      <div class="footer-bottom"><span>© 2026 Trivial Client. Все права защищены.</span><span>Не связан с Mojang Studios или Microsoft.</span></div>
+      <div class="footer-bottom"><span>© 2026 Trivial Client.</span><span>Не связан с Mojang Studios или Microsoft.</span></div>
     </div>
   </footer>
   <script src="/js/api.js"></script><script src="/js/header.js"></script><script src="/js/home.js"></script>
