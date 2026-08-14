@@ -1,43 +1,43 @@
 (() => {
   const header = document.querySelector('.home-header');
-  const setHeaderState = () => header?.classList.toggle('is-scrolled', window.scrollY > 40);
+  const setHeaderState = () => header?.classList.toggle('is-scrolled', window.scrollY > 28);
   setHeaderState();
   window.addEventListener('scroll', setHeaderState, { passive: true });
 
-  const modal = document.getElementById('videoModal');
-  const close = modal?.querySelector('.video-modal-close');
-  const videos = modal ? [...modal.querySelectorAll('video')] : [];
+  const reveal = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-revealed');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: .12, rootMargin: '0px 0px -30px' });
+    reveal.forEach(el => observer.observe(el));
+  } else reveal.forEach(el => el.classList.add('is-revealed'));
 
-  const closeModal = () => {
-    if (!modal) return;
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
-    videos.forEach(video => {
-      video.pause();
-      video.classList.remove('is-active');
+  let countersStarted = false;
+  const counterRoot = document.querySelector('.hero-stats');
+  const runCounters = () => {
+    if (countersStarted) return;
+    countersStarted = true;
+    document.querySelectorAll('[data-counter]').forEach(el => {
+      const target = Number(el.dataset.counter || 0);
+      const start = performance.now();
+      const duration = 900;
+      const frame = now => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased).toLocaleString('ru-RU');
+        if (t < 1) requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
     });
-    document.body.style.overflow = '';
   };
-
-  document.querySelectorAll('[data-video-open]').forEach(button => {
-    button.addEventListener('click', () => {
-      if (!modal) return;
-      const video = document.getElementById(button.dataset.videoOpen);
-      if (!video) return;
-      videos.forEach(item => item.classList.remove('is-active'));
-      video.classList.add('is-active');
-      modal.classList.add('is-open');
-      modal.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      video.play().catch(() => {});
-    });
-  });
-
-  close?.addEventListener('click', closeModal);
-  modal?.addEventListener('click', event => {
-    if (event.target === modal) closeModal();
-  });
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') closeModal();
-  });
+  if (counterRoot && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) { runCounters(); observer.disconnect(); }
+    }, { threshold: .2 });
+    observer.observe(counterRoot);
+  } else runCounters();
 })();

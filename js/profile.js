@@ -52,7 +52,7 @@ async function loadProfile() {
     setText('profileCreated', formatDate(user.created_at));
     setText('profileHwid', user.hwid || 'Будет привязан при первом запуске');
     const avatar = $('profileAvatar');
-    if (avatar) avatar.src = user.avatar || 'img/logo.png';
+    if (avatar) avatar.src = user.avatar || '/img/logo.svg';
     updateDownloadState(user);
     addAdminLink(user);
     setText('profileLoadStatus', 'Аккаунт, подписка и загрузка лаунчера.');
@@ -111,7 +111,7 @@ $('avatarForm')?.addEventListener('submit', async event => {
   button.disabled = true;
   try {
     const data = await window.TrivialAPI.api('update-avatar', { method: 'POST', body: JSON.stringify({ avatar: form.avatar.value.trim() }) });
-    $('profileAvatar').src = data.avatar || 'img/logo.png';
+    $('profileAvatar').src = data.avatar || '/img/logo.svg';
     if (profileUser) {
       profileUser.avatar = data.avatar || null;
       window.TrivialAPI.saveSession({ user: profileUser });
