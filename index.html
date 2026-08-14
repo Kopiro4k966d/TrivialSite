@@ -1,18 +1,193 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Trivial Client — современный Minecraft-клиент с визуальными эффектами и удобным лаунчером."><title>Trivial Client — официальный сайт</title><link rel="icon" href="/img/logo.png"><link rel="stylesheet" href="/css/header.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/main/index.css"><link rel="stylesheet" href="/css/index_adaptive.css"></head><body><header class="site-header">
-  <div class="header-shell">
-    <a class="brand" href="/"><img src="/img/logo.png" alt="Логотип Trivial"><span>TRIVIAL</span></a>
-    <nav class="nav-links" aria-label="Основная навигация">
-      <a href="/">Главная</a><a href="/#features">Возможности</a><a href="/purchase">Покупка</a><a href="/#showcase">Обзор</a>
-    </nav>
-    <div class="header-actions"><a class="btn btn-small desktop-only" data-account-link href="/signin">Войти</a><button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Trivial Client — современный Minecraft-клиент с удобным лаунчером, визуальными модулями и личным кабинетом.">
+  <title>Trivial Client — официальный сайт</title>
+  <link rel="icon" href="/img/logo.png">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/main/index.css">
+  <link rel="stylesheet" href="/css/index_adaptive.css">
+</head>
+<body class="home-page">
+  <header class="site-header home-header">
+    <div class="header-shell home-header-shell">
+      <a class="brand home-brand" href="/" aria-label="Trivial — главная">
+        <img src="/img/logo.png" alt="">
+        <span class="sr-only">Trivial</span>
+      </a>
+
+      <nav class="nav-links home-nav" aria-label="Основная навигация">
+        <a href="#home" aria-current="page">Главная</a>
+        <a href="#support">Поддержка</a>
+        <a href="#faq">Частые вопросы</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="home-login" data-account-link href="/signin">Авторизация</a>
+        <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-media" aria-hidden="true">
+        <img src="/img/hero-reference.png" alt="">
+      </div>
+      <div class="hero-shade" aria-hidden="true"></div>
+
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <h1><strong>Развивайся вместе с</strong><br><span>Trivial.</span></h1>
+          <p>Порой не стоит играть по правилам, установленным другими.<br>Лучшие правила — те, что создаёшь сам.</p>
+          <a class="hero-button" href="#support">Связь с поддержкой</a>
+        </div>
+
+        <div class="hero-stats" aria-label="Статистика проекта">
+          <div class="stat-item">
+            <strong>2 515</strong>
+            <span>Пользователей уже в игре.</span>
+          </div>
+          <div class="stat-item">
+            <strong>38</strong>
+            <span>Дней активного релиза.</span>
+          </div>
+          <div class="stat-item">
+            <strong>35</strong>
+            <span>Успешно вышедших стабильных обновления.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="media-section" id="review">
+      <div class="media-glow media-glow-left" aria-hidden="true"></div>
+      <div class="media-glow media-glow-right" aria-hidden="true"></div>
+      <div class="container media-container">
+        <p class="media-kicker">Два ролика с реальным геймплеем и обзором возможностей Trivial.</p>
+
+        <div class="video-grid">
+          <article class="video-card">
+            <button class="video-preview" type="button" data-video-open="reviewVideo" aria-label="Воспроизвести обзор Trivial">
+              <img src="/img/review.webp" alt="Обзор Trivial Client">
+              <span class="video-topline">
+                <span class="video-avatar">T</span>
+                <span><b>Review | Trivial</b><small>Trivial</small></span>
+              </span>
+              <span class="youtube-play" aria-hidden="true"><i></i></span>
+              <span class="video-follow">Смотреть обзор</span>
+            </button>
+            <div class="video-copy">
+              <h2>Обзор клиента</h2>
+              <p>Интерфейс, модули и настройка под себя.</p>
+            </div>
+          </article>
+
+          <article class="video-card">
+            <button class="video-preview" type="button" data-video-open="gameplayVideo" aria-label="Воспроизвести геймплей Trivial">
+              <img src="/img/gameplay.webp" alt="Геймплей Trivial Client">
+              <span class="video-topline">
+                <span class="video-avatar">T</span>
+                <span><b>Gameplay | Trivial</b><small>Trivial</small></span>
+              </span>
+              <span class="youtube-play" aria-hidden="true"><i></i></span>
+              <span class="video-follow">Смотреть геймплей</span>
+            </button>
+            <div class="video-copy">
+              <h2>Геймплей</h2>
+              <p>Как клиент выглядит в бою и в обычной игре.</p>
+            </div>
+          </article>
+        </div>
+
+        <section class="faq" id="faq" aria-labelledby="faqTitle">
+          <div class="faq-heading">
+            <span>FAQ</span>
+            <h2 id="faqTitle">Частые вопросы</h2>
+          </div>
+          <div class="faq-list">
+            <details>
+              <summary>Как получить доступ к клиенту?</summary>
+              <p>Зарегистрируй аккаунт, выбери тариф на странице покупки и активируй ключ в профиле.</p>
+            </details>
+            <details>
+              <summary>Где скачать лаунчер?</summary>
+              <p>После активации подписки загрузка лаунчера становится доступна в личном кабинете.</p>
+            </details>
+            <details>
+              <summary>Куда обращаться по вопросам?</summary>
+              <p>Используй раздел поддержки внизу страницы. Там же находятся ссылки на документы проекта.</p>
+            </details>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer home-footer" id="support">
+    <div class="container">
+      <div class="home-footer-grid">
+        <div class="home-footer-brand">
+          <a class="footer-logo" href="/">
+            <img src="/img/logo.png" alt="">
+            <strong>Trivial</strong>
+          </a>
+          <p>Наслаждайся игрой с лучшим клиентом.</p>
+        </div>
+
+        <div class="home-footer-column">
+          <h3>Продукт</h3>
+          <a href="/purchase">Купить</a>
+          <a href="/profile">Скачать</a>
+        </div>
+
+        <div class="home-footer-column">
+          <h3>Поддержка 24/7</h3>
+          <a href="#faq">Поддержка</a>
+        </div>
+
+        <div class="home-footer-column">
+          <h3>Документы</h3>
+          <a href="/public-offer">Политика конфиденциальности</a>
+          <a href="/public-offer">Лицензионное соглашение</a>
+          <a href="/public-offer#privacy">Согласие на обработку персональных данных</a>
+        </div>
+      </div>
+
+      <div class="home-footer-bottom">
+        <div class="legal-copy">
+          <p><strong>Trivial Client</strong> <span>Поддержка проекта</span></p>
+          <p>© 2026 Trivial. Все права защищены.</p>
+          <p>Этот проект не связан с Mojang Studios или Microsoft и не поддерживается ими.</p>
+          <p>Minecraft является товарным знаком Mojang Studios.</p>
+        </div>
+        <div class="socials" aria-label="Социальные сети">
+          <a href="#support" aria-label="Telegram">↗</a>
+          <a href="#support" aria-label="Discord">◉</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="video-modal" id="videoModal" aria-hidden="true">
+    <button class="video-modal-close" type="button" aria-label="Закрыть видео">×</button>
+    <div class="video-modal-dialog" role="dialog" aria-modal="true" aria-label="Видео Trivial">
+      <video id="reviewVideo" controls playsinline preload="metadata" poster="/img/review.webp">
+        <source src="/img/visuals/newvisual1.mp4" type="video/mp4">
+      </video>
+      <video id="gameplayVideo" controls playsinline preload="metadata" poster="/img/gameplay.webp">
+        <source src="/img/visuals/newvisual2.mp4" type="video/mp4">
+      </video>
+    </div>
   </div>
-</header>
-<main>
-<section class="hero"><div class="container hero-grid"><div class="hero-copy reveal"><span class="eyebrow">Trivial Client • build 2.0</span><h1>Клиент, который <span>выглядит иначе.</span></h1><p>Чистый лаунчер, выразительные визуальные эффекты и продуманный профиль — в едином чёрно-белом интерфейсе.</p><div class="hero-actions"><a class="btn btn-primary" id="launcherCta" href="/profile">Скачать лаунчер <span class="icon-arrow">→</span></a><a class="btn" href="#showcase">Смотреть обзор</a></div><div class="hero-note"><span></span> Актуальная версия: Minecraft 1.21.11</div></div>
-<div class="launcher-stage reveal"><div class="floating-card card-fps"><strong>240+ FPS</strong><small>Оптимизированный рендер</small></div><div class="floating-card card-build"><strong>Visual Engine 2.4</strong><small>4 набора эффектов</small></div><div class="launcher-window"><div class="window-topbar"><div class="window-dots"><i></i><i></i><i></i></div><div class="window-title">Trivial Launcher</div><div></div></div><div class="launcher-body"><aside class="launcher-sidebar"><img class="side-logo" src="/img/logo.png" alt=""><div class="side-icons"><i class="active"></i><i></i><i></i><i></i></div></aside><div class="launcher-content"><div class="launcher-video"><video autoplay muted loop playsinline preload="metadata"><source src="/img/visuals/newvisual1.mp4" type="video/mp4"></video></div><div class="launcher-bottom"><div class="launcher-profile"><img src="/img/logo.png" alt=""><div><strong>Trivial User</strong><small>Подписка активна</small></div></div><button class="launch-btn">ЗАПУСТИТЬ</button></div></div></div></div></div></div></section>
-<section class="logo-strip"><div class="container strip-shell"><div class="strip-item">1.21.11 Ready</div><div class="strip-item">Visual Engine</div><div class="strip-item">Discord RPC</div><div class="strip-item">Secure Profile</div></div></section>
-<section class="section" id="features"><div class="container"><div class="section-head reveal"><div><span class="eyebrow">Возможности</span><h2>Всё нужное.<br>Без визуального шума.</h2></div><p>Структура интерфейса повторяет логику исходного проекта rockstar.pub, но полностью переработана под Trivial и строгую монохромную эстетику.</p></div><div class="bento"><article class="bento-card large reveal"><h3>Визуальные модели</h3><p>Четыре набора эффектов с плавной анимацией и аккуратным отображением прямо в игре.</p><div class="bento-video"><video autoplay muted loop playsinline preload="metadata"><source src="/img/visuals/newvisual2.mp4" type="video/mp4"></video></div></article><article class="bento-card reveal"><h3>Стабильная производительность</h3><p>Минимальная нагрузка интерфейса и быстрый запуск.</p><div class="metric-number">99.9</div><div class="metric-label">процента заявленного аптайма сервисов</div></article><article class="bento-card reveal"><h3>Контроль в профиле</h3><p>Подписка, HWID, активация ключа и аватар в одном окне.</p><div class="line-visual"><i></i><i></i><i></i><i></i><i></i><i></i></div></article></div></div></section>
-<section class="section" id="showcase"><div class="container"><div class="section-head reveal"><div><span class="eyebrow">Обзор</span><h2>Четыре эффекта.<br>Один стиль.</h2></div><p>Переключай вкладки и смотри демонстрации без ухода со страницы.</p></div><div class="showcase-shell reveal"><div class="showcase-tabs"><button class="active" data-visual="0"><span class="showcase-index">01</span><span><strong>Crystals</strong><small>Кристаллическая аура</small></span></button><button data-visual="1"><span class="showcase-index">02</span><span><strong>Orbit</strong><small>Орбитальные частицы</small></span></button><button data-visual="2"><span class="showcase-index">03</span><span><strong>Halo</strong><small>Световой круг</small></span></button><button data-visual="3"><span class="showcase-index">04</span><span><strong>Ground</strong><small>Эффект поверхности</small></span></button></div><div class="showcase-view"><video class="active" autoplay muted loop playsinline><source src="/img/visuals/newvisual1.mp4" type="video/mp4"></video><video muted loop playsinline><source src="/img/visuals/newvisual2.mp4" type="video/mp4"></video><video muted loop playsinline><source src="/img/visuals/newvisual3.mp4" type="video/mp4"></video><video muted loop playsinline><source src="/img/visuals/newvisual4.mp4" type="video/mp4"></video><div class="showcase-caption"><strong id="visualTitle">Crystals / Visual 01</strong><span>Записано в Trivial Client</span></div></div></div></div></section>
-<section class="section" id="pricing"><div class="container"><div class="section-head reveal"><div><span class="eyebrow">Тарифы</span><h2>Доступ без сложных условий.</h2></div><p>Выбери период. После оплаты ключ можно активировать в личном кабинете.</p></div><div class="pricing-grid"><article class="price-card reveal"><span class="plan">Базовый</span><div class="price">399 ₽ <span>/ 7 дней</span></div><p>Для знакомства с клиентом.</p><ul class="feature-list"><li>Полный функционал</li><li>1 прокрутка рулетки</li><li>Поддержка профиля</li></ul><a class="btn" href="/purchase">Выбрать</a></article><article class="price-card featured reveal"><span class="plan">Стандартный</span><div class="price">899 ₽ <span>/ 30 дней</span></div><p>Оптимальный вариант для постоянной игры.</p><ul class="feature-list"><li>Полный функционал</li><li>3 прокрутки рулетки</li><li>Приоритетные обновления</li></ul><a class="btn btn-primary" href="/purchase">Выбрать</a></article><article class="price-card reveal"><span class="plan">Продвинутый</span><div class="price">1799 ₽ <span>/ 90 дней</span></div><p>Длительный доступ по лучшей цене.</p><ul class="feature-list"><li>Полный функционал</li><li>7 прокруток рулетки</li><li>Длительная подписка</li></ul><a class="btn" href="/purchase">Выбрать</a></article></div></div></section>
-<section class="section"><div class="container"><div class="cta-panel reveal"><h2>Запусти Trivial в своём стиле.</h2><p>Создай аккаунт, выбери доступ и управляй подпиской из единого личного кабинета.</p><a class="btn" href="/signup">Создать аккаунт <span class="icon-arrow">→</span></a></div></div></section>
-</main><footer class="site-footer"><div class="container"><div class="footer-shell"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/"><img src="/img/logo.png" alt=""><span>TRIVIAL</span></a><p>Чёрно-белый сайт Trivial Client: единая визуальная система, адаптивные окна, профиль, покупка и авторизация.</p></div><div class="footer-column"><h3>Платформа</h3><a href="/">Главная</a><a href="/purchase">Покупка</a><a href="/profile">Профиль</a></div><div class="footer-column"><h3>Документы</h3><a href="/public-offer">Публичная оферта</a><a href="/public-offer#privacy">Конфиденциальность</a><a href="/signin">Вход</a></div></div><div class="footer-bottom"><span>© 2026 Trivial Client</span><span>Designed in black & white</span></div></div></div></footer><script src="/js/api.js"></script><script src="/js/header.js"></script><script>document.getElementById("launcherCta")?.addEventListener("click",e=>{if(!TrivialAPI.token()){e.preventDefault();location.href="/signin"}});</script><script src="/js/perfomance.js"></script><script>const names=['Crystals / Visual 01','Orbit / Visual 02','Halo / Visual 03','Ground / Visual 04'];document.querySelectorAll('[data-visual]').forEach((b,i)=>b.addEventListener('click',()=>{document.querySelectorAll('[data-visual]').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.showcase-view video').forEach(v=>{v.classList.remove('active');v.pause()});b.classList.add('active');const v=document.querySelectorAll('.showcase-view video')[i];v.classList.add('active');v.play().catch(()=>{});document.getElementById('visualTitle').textContent=names[i]}));</script></body></html>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/header.js"></script>
+  <script src="/js/home.js"></script>
+</body>
+</html>
