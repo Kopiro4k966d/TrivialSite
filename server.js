@@ -1,5 +1,49 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090b10"><title>Документы — Trivial</title><link rel="icon" href="/img/logo.svg"><link rel="stylesheet" href="/css/app.css"></head><body>
-<header class="site-header"><div class="header-shell"><a class="brand" href="/"><img src="/img/logo.svg" alt=""><span class="sr-only">Trivial</span></a><nav class="nav-links"><a href="/">Главная</a><a href="/purchase">Тарифы</a><a href="/public-offer" aria-current="page">Документы</a></nav><div class="header-actions"><a class="home-login" data-account-link href="/signin">Авторизация</a><button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div></div></header>
-<main class="docs"><div class="container"><div class="docs-head"><span class="eyebrow">Правовая информация</span><h1>Документы проекта</h1><p>Шаблон условий использования и обработки данных. Перед коммерческим запуском укажите фактические реквизиты и проверьте текст с юристом.</p></div><article class="doc-card"><h2>1. Общие положения</h2><p>Настоящий документ описывает условия предоставления доступа к программному обеспечению Trivial Client. Оплата выбранного тарифа означает согласие пользователя с опубликованными условиями.</p><h2>2. Предоставление доступа</h2><ol><li>Доступ предоставляется на срок выбранного тарифа.</li><li>Лицензионный ключ активируется в личном кабинете.</li><li>Ключ может быть привязан к одному HWID, если иное не указано продавцом.</li></ol><h2>3. Ограничения</h2><p>Запрещается перепродавать ключи, обходить технические ограничения, вмешиваться в работу серверной части и передавать данные аккаунта третьим лицам.</p><h2 id="privacy">4. Конфиденциальность</h2><p>Для работы аккаунта могут обрабатываться логин, e-mail, технический идентификатор устройства и данные подписки. Пароли должны храниться только в защищённом виде.</p><h2>5. Контакты и возвраты</h2><p>Порядок поддержки и возврата определяется площадкой оплаты и применимым законодательством. Укажите актуальные контакты и реквизиты до запуска сайта.</p></article></div></main>
-<footer class="site-footer"><div class="container footer-shell"><div class="footer-bottom"><span>© 2026 Trivial Client</span><span><a href="/">На главную</a></span></div></div></footer>
-<script src="/js/api.js"></script><script src="/js/header.js"></script></body></html>
+import 'dotenv/config';
+import express from 'express';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import apiHandler from './api-handler.js';
+
+const app = express();
+const root = path.dirname(fileURLToPath(import.meta.url));
+const port = Number(process.env.PORT || 3000);
+
+app.disable('x-powered-by');
+app.use(express.json({ limit: '256kb' }));
+app.use(express.urlencoded({ extended: false, limit: '256kb' }));
+app.use('/api', (req, res) => apiHandler(req, res));
+app.use('/storage', (_req, res) => res.status(404).send('Not found'));
+for (const blocked of ['/server', '/database', '/scripts']) {
+  app.use(blocked, (_req, res) => res.status(404).send('Not found'));
+}
+app.get(['/package.json', '/package-lock.json', '/vercel.json', '/server.js', '/.env', '/.env.example'], (_req, res) => res.status(404).send('Not found'));
+
+// Keep local development URLs identical to Vercel clean URLs.
+// /profile.html -> /profile, /index.html -> /
+app.use((req, res, next) => {
+  if (!['GET', 'HEAD'].includes(req.method) || !req.path.toLowerCase().endsWith('.html')) return next();
+  const cleanPath = req.path.toLowerCase() === '/index.html' ? '/' : req.path.slice(0, -5);
+  const queryIndex = req.originalUrl.indexOf('?');
+  const query = queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : '';
+  return res.redirect(308, `${cleanPath}${query}`);
+});
+
+app.use(express.static(root, {
+  index: 'index.html',
+  extensions: ['html'],
+  dotfiles: 'deny',
+  setHeaders(res) {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    res.setHeader('X-Frame-Options', 'DENY');
+  }
+}));
+app.use((_req, res) => res.status(404).sendFile(path.join(root, '404.html')));
+app.use((error, _req, res, _next) => {
+  console.error('express:', error);
+  if (res.headersSent) return res.end();
+  return res.status(500).json({ success: false, code: 'INTERNAL_ERROR', message: 'Внутренняя ошибка сервера' });
+});
+
+app.listen(port, () => console.log(`Trivial site: http://localhost:${port}`));

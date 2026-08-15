@@ -1,4 +1,132 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090b10"><title>Вход — Trivial</title><link rel="icon" href="/img/logo.svg"><link rel="stylesheet" href="/css/app.css"></head><body>
-<header class="site-header"><div class="header-shell"><a class="brand" href="/"><img src="/img/logo.svg" alt=""><span class="sr-only">Trivial</span></a><nav class="nav-links"><a href="/">Главная</a><a href="/#features">Преимущества</a><a href="/purchase">Тарифы</a></nav><div class="header-actions"><a class="home-login" href="/signup">Регистрация</a><button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div></div></header>
-<main class="auth-page"><div class="auth-layout"><section class="auth-art"><div><span class="eyebrow">Trivial account</span><h1>С возвращением.</h1><p>Продолжите работу с профилем, лицензией и загрузкой лаунчера.</p></div><div class="auth-points"><div class="auth-point"><i></i> Единый аккаунт для всех сервисов</div><div class="auth-point"><i></i> Управление лицензией и HWID</div><div class="auth-point"><i></i> Быстрый доступ к обновлениям</div></div></section><section class="auth-panel"><h2>Вход в аккаунт</h2><p>Введите логин или e-mail и пароль.</p><form id="signinForm" class="form-grid"><div class="field"><label for="login">Логин или e-mail</label><input id="login" name="login" autocomplete="username" required placeholder="trivial_user"></div><div class="field"><label for="password">Пароль</label><div class="password-wrap"><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Введите пароль"><button class="password-toggle" type="button">Показать</button></div></div><button class="btn btn-primary btn-block" type="submit">Войти</button></form><p id="formStatus" class="status-message" aria-live="polite"></p><div class="auth-switch">Нет аккаунта? <a href="/signup">Зарегистрироваться</a></div></section></div></main>
-<script src="/js/api.js"></script><script src="/js/header.js"></script><script src="/js/form-anim.js"></script><script src="/js/auth.js"></script></body></html>
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "builds": [
+    {
+      "src": "api-handler.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "server/**",
+          "database/**",
+          "storage/launcher/**"
+        ]
+      }
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "js/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "img/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+        "X-Frame-Options": "DENY",
+        "Content-Security-Policy": "default-src 'self'; img-src 'self' https: data:; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+      },
+      "continue": true
+    },
+    {
+      "src": "/index\\.html",
+      "status": 308,
+      "headers": {
+        "Location": "/"
+      }
+    },
+    {
+      "src": "/(signin|signup|login|register|profile|purchase|payment-success|public-offer|admin-panel)\\.html",
+      "status": 308,
+      "headers": {
+        "Location": "/$1"
+      }
+    },
+    {
+      "src": "/storage(?:/.*)?",
+      "status": 404
+    },
+    {
+      "src": "/server(?:/.*)?",
+      "status": 404
+    },
+    {
+      "src": "/database(?:/.*)?",
+      "status": 404
+    },
+    {
+      "src": "/scripts(?:/.*)?",
+      "status": 404
+    },
+    {
+      "src": "/(?:package\\.json|package-lock\\.json|vercel\\.json|server\\.js|api-handler\\.js|\\.env(?:\\..*)?)",
+      "status": 404
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/api(?:/(.*))?",
+      "dest": "/api-handler.js?__route=$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/signin",
+      "dest": "/signin.html"
+    },
+    {
+      "src": "/signup",
+      "dest": "/signup.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/login.html"
+    },
+    {
+      "src": "/register",
+      "dest": "/register.html"
+    },
+    {
+      "src": "/profile",
+      "dest": "/profile.html"
+    },
+    {
+      "src": "/purchase",
+      "dest": "/purchase.html"
+    },
+    {
+      "src": "/payment-success",
+      "dest": "/payment-success.html"
+    },
+    {
+      "src": "/public-offer",
+      "dest": "/public-offer.html"
+    },
+    {
+      "src": "/admin-panel",
+      "dest": "/admin-panel.html"
+    },
+    {
+      "src": "/.*",
+      "dest": "/404.html",
+      "status": 404
+    }
+  ]
+}
