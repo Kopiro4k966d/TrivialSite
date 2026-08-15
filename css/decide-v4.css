@@ -397,3 +397,40 @@ body{letter-spacing:-.006em;overflow-x:hidden}
  .auth-page{padding:90px 18px 42px}.auth-back{left:18px;top:19px}.auth-brand-center{margin-bottom:28px}.auth-minimal .auth-form-wrap h1{font-size:29px}
 }
 @media (prefers-reduced-motion:reduce){[data-reveal],.reveal{opacity:1!important;transform:none!important;transition:none!important}}
+
+.showcase-video {
+    width: 100%;
+    max-width: 1040px;
+    margin: 42px auto 0;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+
+    background: #08080b;
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.visuals-video {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+
+    background: #08080b;
+}
+
+@media (max-width: 760px) {
+
+    .showcase-video {
+        margin-top: 30px;
+        border-radius: 14px;
+    }
+
+}
