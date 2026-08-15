@@ -6,7 +6,7 @@ async function migrate() {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    await client.query("SELECT pg_advisory_xact_lock(hashtext('trivial-site-schema-v4'))");
+    await client.query("SELECT pg_advisory_xact_lock(hashtext('decide-visuals-schema-v4'))");
 
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -209,7 +209,7 @@ async function migrate() {
     await client.query(`
       UPDATE licenses SET license_key=UPPER(BTRIM(license_key)) WHERE license_key IS NOT NULL;
       UPDATE licenses
-      SET license_key = CONCAT('TRIV-LEGACY-', id::text)
+      SET license_key = CONCAT('DECIDE-LEGACY-', id::text)
       WHERE license_key IS NULL OR BTRIM(license_key)='';
       UPDATE licenses SET status=LOWER(BTRIM(status)) WHERE status IS NOT NULL;
       UPDATE licenses SET status='unused' WHERE status IS NULL OR BTRIM(status)='' OR status IN ('new','available','active','false','0');

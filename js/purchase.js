@@ -58,7 +58,7 @@
   continueButton.addEventListener('click', () => {
     const target = method === 'support' ? supportUrl : links[selected.plan];
     if (!target) return;
-    localStorage.setItem('trivial_selected_plan', JSON.stringify({ ...selected, method }));
+    localStorage.setItem('decide_selected_plan', JSON.stringify({ ...selected, method }));
     location.href = target;
   });
 })();

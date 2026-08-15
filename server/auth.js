@@ -11,7 +11,7 @@ function secret() {
     error.code = 'SESSION_SECRET_MISSING';
     throw error;
   }
-  return 'trivial-development-secret-change-me';
+  return 'decide-visuals-development-secret-change-me';
 }
 
 export function createSessionToken(user, ttlSeconds = 60 * 60 * 24 * 30) {

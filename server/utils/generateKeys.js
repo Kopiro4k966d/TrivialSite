@@ -11,5 +11,5 @@ function group(length = 4) {
 
 export function generateKey(days = 30) {
   const duration = Math.max(1, Math.trunc(Number(days) || 30));
-  return `TRIV-${group()}-${group()}-${group()}-${duration}D`;
+  return `DECIDE-${group()}-${group()}-${group()}-${duration}D`;
 }

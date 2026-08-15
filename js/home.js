@@ -1,43 +1,43 @@
 (() => {
-  const header = document.querySelector('.home-header');
-  const setHeaderState = () => header?.classList.toggle('is-scrolled', window.scrollY > 28);
-  setHeaderState();
-  window.addEventListener('scroll', setHeaderState, { passive: true });
-
-  const reveal = document.querySelectorAll('[data-reveal]');
+  const revealItems = document.querySelectorAll('[data-reveal]');
+  const revealNow = element => element.classList.add('is-revealed');
   if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-revealed');
-        observer.unobserve(entry.target);
-      });
-    }, { threshold: .12, rootMargin: '0px 0px -30px' });
-    reveal.forEach(el => observer.observe(el));
-  } else reveal.forEach(el => el.classList.add('is-revealed'));
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      revealNow(entry.target); observer.unobserve(entry.target);
+    }), { threshold: .12, rootMargin: '0px 0px -28px' });
+    revealItems.forEach(el => observer.observe(el));
+  } else revealItems.forEach(revealNow);
 
-  let countersStarted = false;
   const counterRoot = document.querySelector('.hero-stats');
+  let countersStarted = false;
   const runCounters = () => {
-    if (countersStarted) return;
-    countersStarted = true;
+    if (countersStarted) return; countersStarted = true;
     document.querySelectorAll('[data-counter]').forEach(el => {
-      const target = Number(el.dataset.counter || 0);
-      const start = performance.now();
-      const duration = 900;
-      const frame = now => {
-        const t = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - t, 3);
-        el.textContent = Math.round(target * eased).toLocaleString('ru-RU');
-        if (t < 1) requestAnimationFrame(frame);
-      };
+      const target = Number(el.dataset.counter || 0); const start = performance.now(); const duration = 1100;
+      const frame = now => { const t = Math.min(1, (now - start) / duration); const eased = 1 - Math.pow(1 - t, 3); el.textContent = Math.round(target * eased).toLocaleString('ru-RU'); if (t < 1) requestAnimationFrame(frame); };
       requestAnimationFrame(frame);
     });
   };
   if (counterRoot && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) { runCounters(); observer.disconnect(); }
-    }, { threshold: .2 });
-    observer.observe(counterRoot);
+    const io = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) { runCounters(); io.disconnect(); } }, { threshold: .2 }); io.observe(counterRoot);
   } else runCounters();
+
+  const slides = [
+    { title:'Гибкая настройка мира', text:'Меняйте атмосферу и визуальные эффекты так, чтобы клиент ощущался частью игры, а не отдельной панелью поверх неё.', module:'World visuals', rows:['Atmosphere','Sky shader','Bloom'] },
+    { title:'Чистое отображение целей', text:'Выделение целей и меток остаётся читаемым, но не закрывает игровой процесс и не перегружает экран.', module:'Target visuals', rows:['Target ESP','Name tags','Visibility'] },
+    { title:'Интерфейс под себя', text:'Компактный HUD, аккуратные элементы и единый визуальный язык для повседневной игры.', module:'Interface', rows:['HUD layout','Widgets','Notifications'] },
+    { title:'Профили настроек', text:'Собирайте конфигурации под разные режимы и быстро переключайтесь между ними без ручной перенастройки.', module:'Profiles', rows:['Main profile','Performance','Visual preset'] }
+  ];
+  const title = document.getElementById('showcaseTitle'); const text = document.getElementById('showcaseText'); const moduleTitle = document.getElementById('moduleTitle');
+  const rowIds = ['moduleOne','moduleTwo','moduleThree']; let current = 0;
+  function setSlide(index) {
+    current = (index + slides.length) % slides.length; const slide = slides[current];
+    if (title) title.textContent = slide.title; if (text) text.textContent = slide.text; if (moduleTitle) moduleTitle.textContent = slide.module;
+    rowIds.forEach((id,i) => { const el = document.getElementById(id); if (el) el.textContent = slide.rows[i]; });
+    document.querySelectorAll('[data-slide]').forEach(el => el.classList.toggle('active', Number(el.dataset.slide) === current));
+    const canvas = document.getElementById('clientCanvas'); if (canvas) canvas.style.filter = `hue-rotate(${current * 10}deg)`;
+  }
+  document.querySelectorAll('[data-slide]').forEach(el => el.addEventListener('click', () => setSlide(Number(el.dataset.slide))));
+  if (document.querySelector('.showcase-frame')) setInterval(() => setSlide(current + 1), 6000);
 })();

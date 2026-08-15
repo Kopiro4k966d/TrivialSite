@@ -8,14 +8,14 @@ const formatDate = value => {
 let profileUser = null;
 
 function updateDownloadState(user) {
-  const active = window.TrivialAPI.isSubscriptionActive(user);
+  const active = window.DecideAPI.isSubscriptionActive(user);
   const button = $('downloadLauncher');
   const state = $('downloadState');
   const badge = $('subscriptionBadge');
   if (button) {
     button.disabled = !active;
     button.classList.toggle('is-disabled', !active);
-    button.textContent = active ? 'Скачать Trivial Launcher' : 'Нужна активная подписка';
+    button.textContent = active ? 'Скачать Decide Visuals Launcher' : 'Нужна активная подписка';
   }
   if (state) state.textContent = active
     ? `Доступ открыт${user.subscription_days ? ` · осталось ${user.subscription_days} дн.` : ''}`
@@ -40,10 +40,10 @@ function addAdminLink(user) {
 
 async function loadProfile() {
   try {
-    const data = await window.TrivialAPI.api('profile');
+    const data = await window.DecideAPI.api('profile');
     const user = data.user;
     profileUser = user;
-    window.TrivialAPI.saveSession({ user });
+    window.DecideAPI.saveSession({ user });
     setText('profileUsername', user.username);
     setText('profileEmail', user.email);
     setText('profileRole', user.role || 'user');
@@ -52,7 +52,7 @@ async function loadProfile() {
     setText('profileCreated', formatDate(user.created_at));
     setText('profileHwid', user.hwid || 'Будет привязан при первом запуске');
     const avatar = $('profileAvatar');
-    if (avatar) avatar.src = user.avatar || '/img/logo.svg';
+    if (avatar) avatar.src = user.avatar || '/img/decide-mark-v3.png';
     updateDownloadState(user);
     addAdminLink(user);
     setText('profileLoadStatus', 'Аккаунт, подписка и загрузка лаунчера.');
@@ -63,7 +63,7 @@ async function loadProfile() {
 }
 
 $('logoutButton')?.addEventListener('click', () => {
-  window.TrivialAPI.clearSession();
+  window.DecideAPI.clearSession();
   location.href = '/signin';
 });
 
@@ -89,7 +89,7 @@ $('activateForm')?.addEventListener('submit', async event => {
   status.textContent = 'Проверяем ключ…';
   status.className = 'status-message';
   try {
-    const data = await window.TrivialAPI.api('activate', { method: 'POST', body: JSON.stringify({ key: form.key.value.trim() }) });
+    const data = await window.DecideAPI.api('activate', { method: 'POST', body: JSON.stringify({ key: form.key.value.trim() }) });
     status.textContent = data.message;
     status.className = 'status-message success';
     form.reset();
@@ -110,11 +110,11 @@ $('avatarForm')?.addEventListener('submit', async event => {
   const button = form.querySelector('button[type="submit"]');
   button.disabled = true;
   try {
-    const data = await window.TrivialAPI.api('update-avatar', { method: 'POST', body: JSON.stringify({ avatar: form.avatar.value.trim() }) });
-    $('profileAvatar').src = data.avatar || '/img/logo.svg';
+    const data = await window.DecideAPI.api('update-avatar', { method: 'POST', body: JSON.stringify({ avatar: form.avatar.value.trim() }) });
+    $('profileAvatar').src = data.avatar || '/img/decide-mark-v3.png';
     if (profileUser) {
       profileUser.avatar = data.avatar || null;
-      window.TrivialAPI.saveSession({ user: profileUser });
+      window.DecideAPI.saveSession({ user: profileUser });
     }
     status.textContent = data.message;
     status.className = 'status-message success';
@@ -127,13 +127,13 @@ $('avatarForm')?.addEventListener('submit', async event => {
 });
 
 $('downloadLauncher')?.addEventListener('click', async () => {
-  if (!profileUser || !window.TrivialAPI.isSubscriptionActive(profileUser)) return;
+  if (!profileUser || !window.DecideAPI.isSubscriptionActive(profileUser)) return;
   const button = $('downloadLauncher');
   const original = button.textContent;
   button.disabled = true;
   button.textContent = 'Подготавливаем загрузку…';
   try {
-    const response = await fetch('/api/download/launcher', { headers: { Authorization: `Bearer ${window.TrivialAPI.token()}` } });
+    const response = await fetch('/api/download/launcher', { headers: { Authorization: `Bearer ${window.DecideAPI.token()}` } });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       throw new Error(data?.message || 'Не удалось скачать лаунчер');
@@ -142,7 +142,7 @@ $('downloadLauncher')?.addEventListener('click', async () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'TrivialLauncher.zip';
+    link.download = 'DecideVisualsLauncher.zip';
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -150,7 +150,7 @@ $('downloadLauncher')?.addEventListener('click', async () => {
   } catch (error) {
     $('downloadState').textContent = error.message;
   } finally {
-    const active = window.TrivialAPI.isSubscriptionActive(profileUser);
+    const active = window.DecideAPI.isSubscriptionActive(profileUser);
     button.disabled = !active;
     button.classList.toggle('is-disabled', !active);
     button.textContent = active ? original : 'Нужна активная подписка';

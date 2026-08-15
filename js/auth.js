@@ -5,7 +5,7 @@ const setStatus = (element, message, type = '') => {
 };
 
 async function submit(path, payload) {
-  return window.TrivialAPI.api(path, { method: 'POST', body: JSON.stringify(payload) });
+  return window.DecideAPI.api(path, { method: 'POST', body: JSON.stringify(payload) });
 }
 
 function safeNextPage() {
@@ -32,7 +32,7 @@ if (signinForm) signinForm.addEventListener('submit', async event => {
   setStatus(status, 'Проверяем данные…');
   try {
     const data = await submit('login', { username: signinForm.login.value.trim(), password: signinForm.password.value });
-    window.TrivialAPI.saveSession(data);
+    window.DecideAPI.saveSession(data);
     setStatus(status, 'Вход выполнен. Открываем профиль…', 'success');
     setTimeout(() => { location.href = safeNextPage(); }, 300);
   } catch (error) {
@@ -64,7 +64,7 @@ if (signupForm) signupForm.addEventListener('submit', async event => {
       email: signupForm.email.value.trim(),
       password: signupForm.password.value
     });
-    window.TrivialAPI.saveSession(data);
+    window.DecideAPI.saveSession(data);
     setStatus(status, 'Аккаунт создан. Открываем профиль…', 'success');
     setTimeout(() => { location.href = '/profile'; }, 300);
   } catch (error) {

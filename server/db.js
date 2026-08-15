@@ -38,7 +38,7 @@ if (databaseConfigured) {
     connectionTimeoutMillis: Math.max(1_000, Number(process.env.DATABASE_CONNECT_TIMEOUT_MS || 10_000)),
     query_timeout: Math.max(1_000, Number(process.env.DATABASE_QUERY_TIMEOUT_MS || 20_000)),
     allowExitOnIdle: true,
-    application_name: process.env.DATABASE_APPLICATION_NAME || 'trivial-site'
+    application_name: process.env.DATABASE_APPLICATION_NAME || 'decide-visuals-site'
   });
   pool.on('error', error => console.error('postgres pool:', error));
 } else {

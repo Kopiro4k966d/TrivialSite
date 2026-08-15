@@ -96,12 +96,12 @@ export async function downloadLauncher(req, res) {
     if (!row || !subscriptionInfo(row.subscription).active) return res.status(403).json({ success: false, code: 'SUBSCRIPTION_REQUIRED', message: 'Скачивание доступно только при активной подписке' });
     if (process.env.LAUNCHER_DOWNLOAD_URL) return res.redirect(302, process.env.LAUNCHER_DOWNLOAD_URL);
     const configured = process.env.LAUNCHER_FILE_PATH;
-    const filePath = configured ? path.resolve(configured) : path.join(root, 'storage', 'launcher', 'TrivialLauncher.zip');
+    const filePath = configured ? path.resolve(configured) : path.join(root, 'storage', 'launcher', 'DecideVisualsLauncher.zip');
     if (!fs.existsSync(filePath)) return res.status(503).json({ success: false, code: 'LAUNCHER_NOT_PUBLISHED', message: 'Сборка лаунчера ещё не опубликована' });
     const stat = fs.statSync(filePath);
     res.setHeader('Content-Type', 'application/zip');
     res.setHeader('Content-Length', String(stat.size));
-    res.setHeader('Content-Disposition', 'attachment; filename="TrivialLauncher.zip"');
+    res.setHeader('Content-Disposition', 'attachment; filename="DecideVisualsLauncher.zip"');
     res.setHeader('Cache-Control', 'private, no-store');
     return fs.createReadStream(filePath).pipe(res);
   } catch (error) {

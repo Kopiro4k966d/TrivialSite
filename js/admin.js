@@ -13,7 +13,7 @@
   }
 
   async function loadStats() {
-    const stats = await window.TrivialAPI.api('stats');
+    const stats = await window.DecideAPI.api('stats');
     byId('statUsers').textContent = stats.users;
     byId('statActive').textContent = stats.activeSubscriptions;
     byId('statKeys').textContent = stats.unusedKeys;
@@ -21,7 +21,7 @@
 
   async function initialize() {
     try {
-      const profile = await window.TrivialAPI.api('profile');
+      const profile = await window.DecideAPI.api('profile');
       const role = String(profile.user.role || '').toLowerCase();
       if (!['creator', 'admin'].includes(role)) {
         location.replace('/profile');
@@ -48,7 +48,7 @@
     setStatus('Создаём ключ…');
 
     try {
-      const data = await window.TrivialAPI.api('create-key', {
+      const data = await window.DecideAPI.api('create-key', {
         method: 'POST',
         body: JSON.stringify({ duration })
       });
@@ -66,7 +66,7 @@
 
   copyButton?.addEventListener('click', async () => {
     const key = generated.textContent.trim();
-    if (!key.startsWith('TRIV-')) return;
+    if (!/^[A-Z0-9-]{8,}$/.test(key)) return;
     try {
       await navigator.clipboard.writeText(key);
       const original = copyButton.textContent;
