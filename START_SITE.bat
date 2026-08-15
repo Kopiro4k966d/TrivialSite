@@ -1,17 +1,49 @@
-@echo off
-setlocal
-cd /d "%~dp0"
-where node >nul 2>nul || (echo [ERROR] Install Node.js 20+ first.& pause & exit /b 1)
-if not exist .env (
-  copy .env.example .env >nul
-  echo Created .env. Configure DATABASE_URL and SESSION_SECRET, then run this file again.
-  notepad .env
-  pause
-  exit /b 1
-)
-if not exist node_modules (
-  echo Installing website dependencies...
-  call npm install || (echo [ERROR] npm install failed.& pause & exit /b 1)
-)
-call npm start
-if errorlevel 1 pause
+import 'dotenv/config';
+import express from 'express';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import apiHandler from './api-handler.js';
+
+const app = express();
+const root = path.dirname(fileURLToPath(import.meta.url));
+const port = Number(process.env.PORT || 3000);
+
+app.disable('x-powered-by');
+app.use(express.json({ limit: '256kb' }));
+app.use(express.urlencoded({ extended: false, limit: '256kb' }));
+app.use('/api', (req, res) => apiHandler(req, res));
+app.use('/storage', (_req, res) => res.status(404).send('Not found'));
+for (const blocked of ['/server', '/database', '/scripts']) {
+  app.use(blocked, (_req, res) => res.status(404).send('Not found'));
+}
+app.get(['/package.json', '/package-lock.json', '/vercel.json', '/server.js', '/.env', '/.env.example'], (_req, res) => res.status(404).send('Not found'));
+
+// Keep local development URLs identical to Vercel clean URLs.
+// /profile.html -> /profile, /index.html -> /
+app.use((req, res, next) => {
+  if (!['GET', 'HEAD'].includes(req.method) || !req.path.toLowerCase().endsWith('.html')) return next();
+  const cleanPath = req.path.toLowerCase() === '/index.html' ? '/' : req.path.slice(0, -5);
+  const queryIndex = req.originalUrl.indexOf('?');
+  const query = queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : '';
+  return res.redirect(308, `${cleanPath}${query}`);
+});
+
+app.use(express.static(root, {
+  index: 'index.html',
+  extensions: ['html'],
+  dotfiles: 'deny',
+  setHeaders(res) {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    res.setHeader('X-Frame-Options', 'DENY');
+  }
+}));
+app.use((_req, res) => res.status(404).sendFile(path.join(root, '404.html')));
+app.use((error, _req, res, _next) => {
+  console.error('express:', error);
+  if (res.headersSent) return res.end();
+  return res.status(500).json({ success: false, code: 'INTERNAL_ERROR', message: 'Внутренняя ошибка сервера' });
+});
+
+app.listen(port, () => console.log(`Trivial site: http://localhost:${port}`));

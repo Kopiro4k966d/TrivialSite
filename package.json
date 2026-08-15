@@ -1,22 +1,6 @@
-{
-  "name": "trivial-client-site",
-  "version": "10.0.0",
-  "private": true,
-  "type": "module",
-  "description": "Trivial Client website, subscription API and protected launcher download",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "check": "node scripts/check.js",
-    "migrate": "node scripts/migrate.js"
-  },
-  "engines": {
-    "node": "24.x"
-  },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "pg": "^8.13.1"
-  }
-}
+@echo off
+setlocal
+cd /d "%~dp0"
+start "" http://localhost:3000/admin-panel
+call npm start
+if errorlevel 1 pause
