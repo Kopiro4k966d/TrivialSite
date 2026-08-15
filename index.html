@@ -3,185 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Decide Visuals — приватный визуальный клиент. Личный кабинет, лицензии, ключи и быстрый запуск.">
-  <meta name="theme-color" content="#09090c">
-  <title>Decide Visuals</title>
-  <link rel="icon" type="image/png" href="/img/decide-app-v3.png?v=3">
-  <link rel="stylesheet" href="/css/decide-v3.css?v=3">
+  <meta name="description" content="Decide Visuals — приватный визуальный клиент с быстрым запуском, лицензией и личным кабинетом.">
+  <meta name="theme-color" content="#08080b">
+  <title>Decide Visuals — официальный сайт</title>
+  <link rel="icon" href="/img/decide-mark-v3.png?v=4">
+  <link rel="stylesheet" href="/css/decide-v4.css">
 </head>
-<body class="landing-v3">
-<header class="site-header dv-header">
-  <div class="header-shell dv-nav-shell">
-    <a class="brand dv-brand" href="/" aria-label="Decide Visuals">
-      <img src="/img/decide-mark-v3.png?v=3" alt="">
-      <span>Decide Visuals</span>
-    </a>
-    <nav class="nav-links dv-nav-links" aria-label="Основная навигация">
-      <a href="#home">Главная</a>
-      <a href="#overview">Обзор</a>
-      <a href="#metrics">Метрики</a>
-      <a href="/purchase">Покупка</a>
+<body>
+<header class="site-header home-header">
+  <div class="header-shell">
+    <a class="brand" href="/" aria-label="Decide Visuals — главная"><img src="/img/decide-mark-v3.png?v=4" alt=""><span>Decide Visuals</span></a>
+    <nav class="nav-links" aria-label="Основная навигация">
+      <a href="#home">Главная</a><a href="#overview">Обзор</a><a href="#metrics">Метрики</a><a href="/purchase">Покупка</a>
     </nav>
-    <div class="header-actions dv-header-actions">
-      <a class="dv-lang" href="#" aria-label="Язык">● <span>RU</span></a>
-      <a class="home-login dv-register" data-account-link href="/signup">Регистрация</a>
-      <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button>
-    </div>
+    <div class="header-actions"><a class="home-login" data-account-link href="/signin">Регистрация</a><button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div>
   </div>
 </header>
-
-<main>
-  <section class="dv-hero" id="home">
-    <div class="dv-hero-art" aria-hidden="true">
-      <div class="dv-ribbon dv-ribbon-a"></div>
-      <div class="dv-ribbon dv-ribbon-b"></div>
-      <div class="dv-ribbon dv-ribbon-c"></div>
-      <div class="dv-vignette"></div>
+<main class="home-main">
+  <section class="hero" id="home">
+    <div class="hero-backdrop"><i class="hero-orb one"></i><i class="hero-orb two"></i><i class="hero-orb three"></i></div>
+    <div class="container hero-content">
+      <span class="pill" data-reveal style="--delay:60ms">Decide Visuals · private access</span>
+      <h1 data-reveal style="--delay:140ms">Видишь больше.<br><span>Играешь чище.</span></h1>
+      <p data-reveal style="--delay:220ms">Визуальный клиент с аккуратным интерфейсом, быстрым запуском и настройками, которые не мешают игре.</p>
+      <div class="hero-actions" data-reveal style="--delay:300ms"><a class="btn btn-primary" href="/purchase">Получить доступ</a><a class="btn" href="#overview">Посмотреть обзор</a></div>
     </div>
-    <div class="dv-hero-copy">
-      <div class="dv-pill" data-dv-reveal style="--delay:80ms"><img src="/img/decide-mark-v3.png?v=3" alt=""> Decide Visuals</div>
-      <h1 data-dv-reveal style="--delay:160ms">Видишь больше.<br><span>Играешь точнее.</span></h1>
-      <p data-dv-reveal style="--delay:240ms">Спокойный визуальный клиент с быстрым запуском, понятными настройками и единым личным кабинетом.</p>
-      <div class="dv-hero-buttons" data-dv-reveal style="--delay:320ms">
-        <a class="dv-button dv-button-primary" href="/purchase">Получить доступ</a>
-        <a class="dv-button dv-button-ghost" href="#overview">Смотреть обзор</a>
-      </div>
-    </div>
-    <a class="dv-scroll-hint" href="#overview" aria-label="Прокрутить к обзору"><span></span></a>
+    <div class="hero-scroll"><i></i>ниже</div>
   </section>
 
-  <section class="dv-section dv-overview" id="overview">
-    <div class="dv-wrap">
-      <div class="dv-section-head dv-center" data-dv-reveal>
-        <span class="dv-section-label">Интерфейс</span>
-        <h2>Работает спокойно.<br>Выглядит точно.</h2>
-        <p>Главные настройки находятся на одном экране и не мешают игровому процессу.</p>
-      </div>
-
-      <div class="dv-client-stage" data-dv-reveal>
-        <div class="dv-client-window">
-          <div class="dv-client-topbar">
-            <div class="dv-client-brand"><img src="/img/decide-mark-v3.png?v=3" alt=""><span>Decide Visuals</span></div>
-            <div class="dv-window-search">Search modules</div>
-            <div class="dv-window-user"><i></i><span>Decide</span></div>
-          </div>
-          <div class="dv-client-layout">
-            <aside class="dv-client-sidebar">
-              <strong>VISUALS</strong>
-              <button class="active" data-dv-slide="0"><span>01</span>World</button>
-              <button data-dv-slide="1"><span>02</span>Targets</button>
-              <button data-dv-slide="2"><span>03</span>Interface</button>
-              <button data-dv-slide="3"><span>04</span>Profiles</button>
-              <div class="dv-client-version">v2.4.1</div>
-            </aside>
-            <div class="dv-game-view" id="dvGameView">
-              <div class="dv-sky"></div>
-              <div class="dv-landscape dv-landscape-one"></div>
-              <div class="dv-landscape dv-landscape-two"></div>
-              <div class="dv-crosshair"><i></i><i></i></div>
-              <div class="dv-hud-chip">FPS <strong>238</strong></div>
-              <div class="dv-module-card">
-                <div class="dv-module-head"><div><span>VISUAL MODULE</span><h3 id="dvModuleTitle">World visuals</h3></div><em>ACTIVE</em></div>
-                <div class="dv-module-row"><span id="dvRow1">Atmosphere</span><button class="dv-switch on" type="button"><i></i></button></div>
-                <div class="dv-module-row"><span id="dvRow2">Sky shader</span><button class="dv-switch on" type="button"><i></i></button></div>
-                <div class="dv-module-row"><span id="dvRow3">Bloom</span><button class="dv-switch" type="button"><i></i></button></div>
-                <div class="dv-slider"><i></i></div>
-              </div>
-            </div>
+  <section class="section showcase" id="overview">
+    <div class="container">
+      <div class="section-heading" data-reveal><span class="eyebrow">Интерфейс</span><h2>Работает спокойно.<br>Выглядит точно.</h2><p>Один интерфейс для визуальных модулей, профилей и быстрых настроек. Без перегруза и лишних окон.</p></div>
+      <div class="showcase-frame" data-reveal>
+        <div class="showcase-top"><div class="window-controls"><i></i><i></i><i></i></div><div class="showcase-brand"><img src="/img/decide-mark-v3.png?v=4" alt="">Decide Visuals</div><span>build 2.0</span></div>
+        <div class="showcase-body">
+          <aside class="client-side"><strong>Visual Center</strong><button class="active" data-slide="0">World</button><button data-slide="1">Targets</button><button data-slide="2">Interface</button><button data-slide="3">Profiles</button></aside>
+          <div class="client-canvas" id="clientCanvas">
+            <div class="game-horizon"></div><div class="game-glow"></div><div class="crosshair"></div>
+            <div class="module-panel"><h3 id="moduleTitle">World visuals</h3><div class="module-row"><span id="moduleOne">Atmosphere</span><i class="toggle-dot on"></i></div><div class="module-row"><span id="moduleTwo">Sky shader</span><i class="toggle-dot on"></i></div><div class="module-row"><span id="moduleThree">Bloom</span><i class="toggle-dot"></i></div></div>
           </div>
         </div>
-        <button class="dv-arrow dv-prev" type="button" aria-label="Предыдущий слайд">‹</button>
-        <button class="dv-arrow dv-next" type="button" aria-label="Следующий слайд">›</button>
       </div>
+      <div class="showcase-caption" data-reveal><div><h3 id="showcaseTitle">Гибкая настройка мира</h3><p id="showcaseText">Меняйте атмосферу и визуальные эффекты так, чтобы клиент ощущался частью игры, а не отдельной панелью поверх неё.</p></div><div class="slider-dots"><button class="slider-dot active" data-slide="0" aria-label="Слайд 1"></button><button class="slider-dot" data-slide="1" aria-label="Слайд 2"></button><button class="slider-dot" data-slide="2" aria-label="Слайд 3"></button><button class="slider-dot" data-slide="3" aria-label="Слайд 4"></button></div></div>
+    </div>
+  </section>
 
-      <div class="dv-showcase-caption" data-dv-reveal>
-        <div>
-          <h3 id="dvSlideTitle">Настройка мира без перегруза</h3>
-          <p id="dvSlideText">Атмосфера, небо и эффекты собраны в одной компактной панели.</p>
-        </div>
-        <div class="dv-dots" aria-label="Слайды">
-          <button class="active" data-dv-slide="0" aria-label="Слайд 1"></button>
-          <button data-dv-slide="1" aria-label="Слайд 2"></button>
-          <button data-dv-slide="2" aria-label="Слайд 3"></button>
-          <button data-dv-slide="3" aria-label="Слайд 4"></button>
-        </div>
+  <section class="section metrics" id="metrics">
+    <div class="container">
+      <div class="section-heading" data-reveal><span class="eyebrow">Публичные метрики</span><h2>Просто цифры.</h2><p>Короткий статус проекта без лишней информации.</p></div>
+      <div class="metrics-shell hero-stats" data-reveal>
+        <div class="metric-copy"><strong>Decide Visuals</strong><span>актуальная стабильная сборка</span></div>
+        <div class="metric"><strong data-counter="4552">0</strong><span>пользователей</span></div>
+        <div class="metric"><strong data-counter="145824">0</strong><span>запусков</span></div>
+        <div class="metric"><strong>Сегодня</strong><span>последнее обновление</span></div>
       </div>
     </div>
   </section>
 
-  <section class="dv-section dv-metrics" id="metrics">
-    <div class="dv-wrap">
-      <div class="dv-section-head dv-center" data-dv-reveal>
-        <span class="dv-badge">↗ Метрики</span>
-        <h2>Публичные метрики</h2>
-        <p>Небольшой открытый статус проекта.</p>
-      </div>
-      <div class="dv-metric-grid" data-dv-reveal>
-        <article><span class="dv-metric-icon">●</span><div><small>Последнее обновление</small><strong>Сегодня</strong></div></article>
-        <article><span class="dv-metric-icon">◆</span><div><small>Пользователей</small><strong data-dv-counter="4552">0</strong></div></article>
-        <article><span class="dv-metric-icon">▲</span><div><small>Запусков</small><strong data-dv-counter="145824">0</strong></div></article>
-      </div>
+  <section class="section demo-section">
+    <div class="container demo-shell">
+      <div class="demo-copy" data-reveal><span class="eyebrow">Decide Core</span><h2>Меньше действий.<br>Больше контроля.</h2><p>Аккаунт, ключ и загрузка находятся в одном месте. После активации лицензии лаунчер становится доступен прямо в профиле.</p><div class="demo-list"><div><span>01</span>Создайте аккаунт</div><div><span>02</span>Активируйте ключ</div><div><span>03</span>Скачайте лаунчер</div></div></div>
+      <div class="demo-card" data-reveal><div class="demo-card-grid"></div><div class="demo-widget w1"><div class="widget-head"><span>VISUAL PROFILE</span><span>ONLINE</span></div><div class="widget-title">Night / soft purple</div><div class="bar"><i></i></div><div class="chips"><span>Bloom low</span><span>Shader sync</span><span>240 fps</span></div></div><div class="demo-widget w2"><div class="widget-head"><span>TARGET</span><span>VISIBLE</span></div><div class="widget-title">Rockstar ESP</div><div class="chips"><span>smooth</span><span>alpha 82%</span></div></div><div class="demo-widget w3"><div class="widget-head"><span>ACCOUNT</span><span>LICENSE</span></div><div class="widget-title">Access ready</div><div class="bar"><i style="width:100%"></i></div></div></div>
     </div>
   </section>
 
-  <section class="dv-section dv-demo">
-    <div class="dv-wrap">
-      <div class="dv-section-head dv-center" data-dv-reveal>
-        <span class="dv-section-label">Демонстрация</span>
-        <h2>Decide Visuals в работе</h2>
-        <p>Лаконичный интерфейс, плавные переходы и быстрый доступ к нужным настройкам.</p>
-      </div>
-      <div class="dv-demo-frame" data-dv-reveal>
-        <div class="dv-demo-toolbar"><div class="dv-client-brand"><img src="/img/decide-mark-v3.png?v=3" alt=""><span>Decide Visuals</span></div><span>Visual profile / Night</span></div>
-        <div class="dv-demo-scene">
-          <div class="dv-demo-glow"></div>
-          <div class="dv-demo-title">DECIDE<span>VISUALS</span></div>
-          <div class="dv-demo-ui one"><small>WORLD</small><strong>Soft purple</strong><i></i></div>
-          <div class="dv-demo-ui two"><small>HUD</small><strong>Minimal</strong><i></i></div>
-          <div class="dv-demo-ui three"><small>PROFILE</small><strong>Ready</strong><i></i></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="dv-section dv-pricing" id="pricing">
-    <div class="dv-wrap">
-      <div class="dv-section-head dv-center" data-dv-reveal>
-        <span class="dv-badge">⌁ Тарифы</span>
-        <h2>Наши тарифы</h2>
-        <p>Одинаковый функционал — выбирайте только срок доступа.</p>
-      </div>
-      <div class="dv-price-grid">
-        <article class="dv-price-card" data-dv-reveal>
-          <h3>Базовый</h3><p>Полный доступ на 7 дней</p><div class="dv-price"><strong>399₽</strong><span>/ неделя</span></div>
-          <a class="dv-button dv-button-muted" href="/purchase">Купить</a>
-        </article>
-        <article class="dv-price-card dv-price-featured" data-dv-reveal style="--delay:80ms">
-          <span class="dv-popular">Популярный</span><h3>Стандартный</h3><p>Полный доступ на 30 дней</p><div class="dv-price"><strong>899₽</strong><span>/ месяц</span></div>
-          <a class="dv-button dv-button-primary" href="/purchase">Купить</a>
-        </article>
-        <article class="dv-price-card" data-dv-reveal style="--delay:160ms">
-          <h3>Продвинутый</h3><p>Полный доступ на 90 дней</p><div class="dv-price"><strong>1799₽</strong><span>/ 3 месяца</span></div>
-          <a class="dv-button dv-button-muted" href="/purchase">Купить</a>
-        </article>
+  <section class="section pricing-section" id="pricing">
+    <div class="container">
+      <div class="section-heading" data-reveal><span class="eyebrow">Тарифы</span><h2>Выберите срок доступа.</h2><p>Функциональность одинаковая. Отличается только срок действия лицензии.</p></div>
+      <div class="pricing-grid">
+        <article class="price-card" data-reveal><h3>7 дней</h3><p>Короткий доступ, чтобы начать пользоваться Decide Visuals.</p><div class="price-value"><strong>399₽</strong><span>/ неделя</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn" href="/purchase">Выбрать</a></article>
+        <article class="price-card featured" data-reveal style="--delay:80ms"><span class="price-badge">Популярный</span><h3>30 дней</h3><p>Основной вариант для постоянного использования клиента.</p><div class="price-value"><strong>899₽</strong><span>/ месяц</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn btn-primary" href="/purchase">Выбрать</a></article>
+        <article class="price-card" data-reveal style="--delay:160ms"><h3>90 дней</h3><p>Максимальный срок с самой низкой стоимостью одного дня.</p><div class="price-value"><strong>1799₽</strong><span>/ 3 месяца</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn" href="/purchase">Выбрать</a></article>
       </div>
     </div>
   </section>
 </main>
-
-<footer class="dv-footer">
-  <div class="dv-wrap">
-    <div class="dv-footer-grid">
-      <div class="dv-footer-brand"><a class="brand dv-brand" href="/"><img src="/img/decide-mark-v3.png?v=3" alt=""><span>Decide Visuals</span></a><p>Private visual client.</p></div>
-      <div><strong>Платформа</strong><a href="/">Главная</a><a href="/purchase">Покупка</a><a href="#overview">Обзор</a></div>
-      <div><strong>Аккаунт</strong><a href="/signin">Вход</a><a href="/signup">Регистрация</a><a href="/profile">Профиль</a></div>
-      <div><strong>Соглашения</strong><a href="/public-offer">Публичная оферта</a><a href="/public-offer#privacy">Конфиденциальность</a></div>
-    </div>
-    <div class="dv-footer-bottom"><span>© 2026 Decide Visuals</span><span>All rights reserved</span></div>
-  </div>
-</footer>
-<script src="/js/api.js"></script>
-<script src="/js/header.js?v=3"></script>
-<script src="/js/landing-v3.js?v=3"></script>
-</body>
-</html>
+<footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/"><img src="/img/decide-mark-v3.png?v=4" alt=""><span>Decide Visuals</span></a><p>Визуальный клиент с приватным доступом, лицензиями и защищённой загрузкой.</p></div><div class="footer-col"><h4>Платформа</h4><a href="/">Главная</a><a href="/purchase">Покупка</a><a href="#overview">Обзор</a></div><div class="footer-col"><h4>Аккаунт</h4><a href="/signin">Вход</a><a href="/signup">Регистрация</a><a href="/profile">Профиль</a></div><div class="footer-col"><h4>Соглашения</h4><a href="/public-offer">Публичная оферта</a><span>Политика конфиденциальности</span></div></div><div class="footer-bottom"><span>© 2026 Decide Visuals</span><span>All rights reserved</span></div></div></footer>
+<script src="/js/api.js"></script><script src="/js/header.js"></script><script src="/js/home.js"></script>
+</body></html>
