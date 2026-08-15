@@ -1,15 +1,18 @@
 <!doctype html>
 <html lang="ru">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08080c"><title>Профиль — Decide Visuals</title><link rel="icon" href="/img/decide-mark-v3.png?v=8"><link rel="stylesheet" href="/css/decide-v8.css?v=8"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08080c"><title>Профиль — Decide Visuals</title><link rel="icon" href="/img/decide-mark-v3.png?v=9"><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/decide-v9.css?v=9"></head>
 <body class="inner-page" data-auth-required>
-<header class="site-header"><div class="header-shell"><a class="brand" href="/"><img src="/img/decide-mark-v3.png?v=8" alt=""><span>Decide Visuals</span></a><nav class="nav-links"><a href="/">Главная</a><a href="/purchase">Покупка</a><a href="/profile" aria-current="page">Профиль</a></nav><div class="header-actions"><button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div></div></header>
+<header class="site-header"><div class="header-shell"><a class="brand" href="/"><img src="/img/decide-mark-v3.png?v=9" alt=""><span>Decide Visuals</span></a><nav class="nav-links"><a href="/">Главная</a><a href="/purchase">Покупка</a><a href="/profile" aria-current="page">Профиль</a></nav><div class="header-actions"><button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div></div></header>
 
 <main class="profile-main"><div class="container">
   <div class="profile-top reveal"><div><span class="eyebrow">Личный кабинет</span><h1>Ваш Decide account.</h1><p id="profileLoadStatus">Загружаем данные аккаунта…</p></div><button class="btn" id="logoutButton">Выйти</button></div>
 
   <div class="profile-layout reveal">
     <aside class="profile-sidebar">
-      <div class="profile-identity"><div class="avatar-wrap"><img id="profileAvatar" src="/img/decide-mark-v3.png?v=8" alt="Аватар"><button class="avatar-edit" data-profile-tab="settings" aria-label="Изменить аватар">+</button></div><div><h2 id="profileUsername">Загрузка…</h2><span class="role" id="profileRole">user</span></div></div>
+      <div class="profile-identity"><div class="avatar-wrap"><img id="profileAvatar" src="/img/decide-mark-v3.png?v=9" alt="Аватар"><button class="avatar-edit" data-profile-tab="settings" aria-label="Изменить аватар">+</button></div><div><h2 id="profileUsername">Загрузка…</h2><span class="role" id="profileRole">user</span></div></div>
       <div id="subscriptionBadge" class="subscription-badge">Проверяем подписку</div>
       <nav class="side-nav"><button class="active" data-profile-tab="overview">Обзор</button><button data-profile-tab="download">Лаунчер</button><button data-profile-tab="license">Ключ</button><button data-profile-tab="settings">Настройки</button></nav>
     </aside>
@@ -17,7 +20,7 @@
     <section class="profile-panel">
       <div class="panel-section active" id="overview"><h2 class="panel-title">Обзор аккаунта</h2><p class="panel-copy">Главная информация о подписке, роли и привязке устройства.</p><div class="stats-grid"><div class="stat-card"><span>Подписка до</span><strong id="profileSubscription">—</strong></div><div class="stat-card"><span>Роль</span><strong id="profileRoleCard">user</strong></div><div class="stat-card"><span>Регистрация</span><strong id="profileCreated">—</strong></div></div><div class="details-list"><div class="detail-row"><span>E-mail</span><strong id="profileEmail">—</strong><button class="copy-btn" data-copy="profileEmail">Копировать</button></div><div class="detail-row"><span>HWID</span><strong id="profileHwid">—</strong><button class="copy-btn" data-copy="profileHwid">Копировать</button></div></div></div>
 
-      <div class="panel-section" id="download"><div class="download-panel"><div class="download-mark"><img src="/img/decide-mark-v3.png?v=8" alt=""></div><span class="eyebrow">Protected download</span><h2>Decide Visuals Launcher</h2><p id="downloadState">Проверяем право на загрузку…</p><button class="btn btn-primary" id="downloadLauncher" disabled>Проверяем подписку…</button><small>Загрузка открывается автоматически, если у аккаунта есть активная лицензия. Лаунчер повторно проверяет подписку перед запуском клиента.</small></div></div>
+      <div class="panel-section" id="download"><div class="download-panel"><div class="download-mark"><img src="/img/decide-mark-v3.png?v=9" alt=""></div><span class="eyebrow">Protected download</span><h2>Decide Visuals Launcher</h2><p id="downloadState">Проверяем право на загрузку…</p><button class="btn btn-primary" id="downloadLauncher" disabled>Проверяем подписку…</button><small>Загрузка открывается автоматически, если у аккаунта есть активная лицензия. Лаунчер повторно проверяет подписку перед запуском клиента.</small></div></div>
 
       <div class="panel-section" id="license"><h2 class="panel-title">Активация ключа</h2><p class="panel-copy">Введите ключ, полученный после покупки. Срок лицензии автоматически добавится к вашему аккаунту.</p><form id="activateForm" class="key-form"><input name="key" required autocomplete="off" placeholder="DECIDE-XXXX-XXXX-XXXX-30D"><button class="btn btn-primary" type="submit">Активировать</button></form><p id="activateStatus" class="status-message" aria-live="polite"></p></div>
 
