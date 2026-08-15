@@ -1,1 +1,6 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090b10"><title>404 — Trivial</title><link rel="icon" href="/img/logo.svg"><link rel="stylesheet" href="/css/app.css"></head><body><main class="success-page"><section class="success-card"><div class="download-orb"><img src="/img/logo.svg" alt=""></div><span class="eyebrow">Ошибка 404</span><h1>Страница не найдена</h1><p>Похоже, ссылка устарела или адрес введён неверно.</p><div class="success-actions"><a class="btn btn-primary" href="/">На главную</a></div></section></main></body></html>
+@echo off
+setlocal
+cd /d "%~dp0"
+start "" http://localhost:3000/admin-panel
+call npm start
+if errorlevel 1 pause

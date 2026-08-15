@@ -1,1 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path fill="white" d="M32 5 57 49.5 44.5 57 32 37.2 19.5 57 7 49.5 32 5Z"/><path fill="#111319" d="M32 18.2 42.8 45 32 37.2 21.2 45 32 18.2Z"/></svg>
+(() => {
+  const TOKEN_KEY = 'decide_token';
+  const USER_KEY = 'decide_user';
+  const USERNAME_KEY = 'decide_username';
+  const LEGACY_TOKEN = 'trivial_token';
+  const LEGACY_USER = 'trivial_user';
+
+  if (!localStorage.getItem(TOKEN_KEY) && localStorage.getItem(LEGACY_TOKEN)) localStorage.setItem(TOKEN_KEY, localStorage.getItem(LEGACY_TOKEN));
+  if (!localStorage.getItem(USER_KEY) && localStorage.getItem(LEGACY_USER)) localStorage.setItem(USER_KEY, localStorage.getItem(LEGACY_USER));
+
+  const clearSession = () => {
+    [TOKEN_KEY, USER_KEY, USERNAME_KEY, 'decide_avatar', 'decide_role', 'decide_hwid', LEGACY_TOKEN, LEGACY_USER, 'trivial_username', 'trivial_avatar', 'trivial_role', 'trivial_hwid'].forEach(key => localStorage.removeItem(key));
+  };
+
+  const api = async (path, options = {}) => {
+    const headers = new Headers(options.headers || {});
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token && !headers.has('Authorization')) headers.set('Authorization', `Bearer ${token}`);
+    if (options.body && !(options.body instanceof FormData) && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+
+    const controller = options.signal ? null : new AbortController();
+    const timeout = controller ? setTimeout(() => controller.abort(), Number(options.timeout || 20_000)) : null;
+    let response;
+    try {
+      response = await fetch(`/api/${String(path).replace(/^\/+/, '')}`, { ...options, headers, signal: options.signal || controller?.signal, credentials: 'same-origin' });
+    } catch (error) {
+      if (error?.name === 'AbortError') throw new Error('Сервер не ответил вовремя. Повторите запрос.');
+      throw new Error('Не удалось связаться с сервером. Проверьте соединение.');
+    } finally {
+      if (timeout) clearTimeout(timeout);
+    }
+
+    const text = await response.text();
+    const contentType = String(response.headers.get('content-type') || '').toLowerCase();
+    const looksLikeHtml = contentType.includes('text/html') || /^\s*<!doctype\s+html/i.test(text) || /^\s*<html/i.test(text);
+    let data = null;
+    if (text) {
+      if (looksLikeHtml) {
+        data = { success: false, code: response.status === 404 ? 'API_ROUTE_NOT_FOUND' : 'API_INVALID_RESPONSE', message: response.status === 404 ? 'API-метод не найден на сервере.' : `Сервер вернул HTML вместо JSON (HTTP ${response.status}).` };
+      } else {
+        try { data = JSON.parse(text); }
+        catch { data = { success: false, code: 'API_INVALID_RESPONSE', message: `Некорректный ответ API (HTTP ${response.status}).` }; }
+      }
+    }
+    if (response.status === 401 && token) clearSession();
+    if (!response.ok || data?.success === false) {
+      const error = new Error(data?.message || `Ошибка запроса (${response.status})`);
+      error.status = response.status; error.code = data?.code; error.details = data; throw error;
+    }
+    return data;
+  };
+
+  const DecideAPI = {
+    api,
+    token: () => localStorage.getItem(TOKEN_KEY),
+    user: () => { try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch { return null; } },
+    saveSession(data) {
+      if (data.token) localStorage.setItem(TOKEN_KEY, data.token);
+      if (data.user) {
+        localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+        localStorage.setItem(USERNAME_KEY, data.user.username || '');
+        localStorage.setItem('decide_role', data.user.role || 'user');
+        if (data.user.hwid) localStorage.setItem('decide_hwid', data.user.hwid);
+      }
+    },
+    clearSession,
+    isSubscriptionActive(user) {
+      if (!user) return false;
+      if (typeof user.subscription_active === 'boolean') return user.subscription_active;
+      const time = user.subscription ? new Date(user.subscription).getTime() : 0;
+      return Number.isFinite(time) && time > Date.now();
+    }
+  };
+  window.DecideAPI = DecideAPI;
+  window.TrivialAPI = DecideAPI;
+})();

@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44"><rect width="160" height="44" rx="12" fill="#17191f"/><text x="80" y="29" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#fff">FunPay</text></svg>
+document.querySelectorAll('.password-toggle').forEach(button => {
+  button.addEventListener('click', () => {
+    const input = button.closest('.password-wrap')?.querySelector('input');
+    if (!input) return;
+    const visible = input.type === 'text'; input.type = visible ? 'password' : 'text'; button.textContent = visible ? '●' : '○';
+  });
+});

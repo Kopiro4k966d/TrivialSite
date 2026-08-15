@@ -1,1 +1,30 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090b10"><title>404 — Trivial</title><link rel="icon" href="/img/logo.svg"><link rel="stylesheet" href="/css/app.css"></head><body><main class="success-page"><section class="success-card"><div class="download-orb"><img src="/img/logo.svg" alt=""></div><span class="eyebrow">Ошибка 404</span><h1>Страница не найдена</h1><p>Похоже, ссылка устарела или адрес введён неверно.</p><div class="success-actions"><a class="btn btn-primary" href="/">На главную</a></div></section></main></body></html>
+import pool, { databaseFailure } from './db.js';
+import { requireSession } from './auth.js';
+import { requireCurrentRole } from './permissions.js';
+
+export default async function stats(req, res) {
+  if (req.method !== 'GET') return res.status(405).json({ success: false, code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' });
+  const session = requireSession(req, res);
+  if (!session) return;
+
+  try {
+    const creator = await requireCurrentRole(session, res);
+    if (!creator) return;
+
+    const [users, active, keys] = await Promise.all([
+      pool.query('SELECT COUNT(*)::int count FROM users'),
+      pool.query('SELECT COUNT(*)::int count FROM users WHERE subscription_until > NOW()'),
+      pool.query("SELECT COUNT(*)::int count FROM licenses WHERE status='unused'")
+    ]);
+    return res.json({
+      success: true,
+      users: users.rows[0].count,
+      activeSubscriptions: active.rows[0].count,
+      unusedKeys: keys.rows[0].count
+    });
+  } catch (error) {
+    console.error('stats:', error);
+    const failure = databaseFailure(error, 'Ошибка статистики');
+    return res.status(failure.status).json({ success: false, code: failure.code, message: failure.message });
+  }
+}

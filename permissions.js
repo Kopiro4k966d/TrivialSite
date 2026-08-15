@@ -1,77 +1,48 @@
-import crypto from 'node:crypto';
+import pool, { databaseFailure } from './db.js';
+import { requireSession } from './auth.js';
+import { requireCurrentRole } from './permissions.js';
+import { generateKey } from './utils/generateKeys.js';
 
-const encoder = value => Buffer.from(JSON.stringify(value)).toString('base64url');
-const decoder = value => JSON.parse(Buffer.from(value, 'base64url').toString('utf8'));
+export default async function createKey(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ success: false, code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' });
+  const session = requireSession(req, res);
+  if (!session) return;
 
-function secret() {
-  const value = String(process.env.SESSION_SECRET || '').trim();
-  if (value) return value;
-  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-    const error = new Error('SESSION_SECRET is required in production');
-    error.code = 'SESSION_SECRET_MISSING';
-    throw error;
+  const duration = Number(req.body?.duration);
+  if (!Number.isInteger(duration) || duration < 1 || duration > 3650) {
+    return res.status(400).json({ success: false, code: 'INVALID_DURATION', message: 'Срок ключа должен быть целым числом от 1 до 3650 дней' });
   }
-  return 'trivial-development-secret-change-me';
-}
 
-export function createSessionToken(user, ttlSeconds = 60 * 60 * 24 * 30) {
-  const now = Math.floor(Date.now() / 1000);
-  const payload = {
-    sub: String(user.id),
-    username: user.username,
-    role: user.role || 'user',
-    iat: now,
-    exp: now + ttlSeconds,
-    v: 1
-  };
-  const encoded = encoder(payload);
-  const signature = crypto.createHmac('sha256', secret()).update(encoded).digest('base64url');
-  return `${encoded}.${signature}`;
-}
-
-export function verifySessionToken(token) {
-  if (!token || typeof token !== 'string') return null;
   try {
-    const [encoded, signature, extra] = token.split('.');
-    if (!encoded || !signature || extra) return null;
-    const expected = crypto.createHmac('sha256', secret()).update(encoded).digest('base64url');
-    const a = Buffer.from(signature);
-    const b = Buffer.from(expected);
-    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
-    const payload = decoder(encoded);
-    if (!payload?.sub || !payload.exp || payload.exp <= Math.floor(Date.now() / 1000)) return null;
-    return payload;
+    const creator = await requireCurrentRole(session, res);
+    if (!creator) return;
+
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const key = generateKey(duration);
+      try {
+        const result = await pool.query(
+          `INSERT INTO licenses (license_key,status,duration_days,created_by)
+           VALUES ($1,'unused',$2,$3)
+           RETURNING id,license_key,duration_days,created_at`,
+          [key, duration, creator.id]
+        );
+        const created = result.rows[0];
+        return res.status(201).json({
+          success: true,
+          key: created.license_key,
+          duration: Number(created.duration_days),
+          createdAt: created.created_at
+        });
+      } catch (error) {
+        if (error?.code === '23505' && attempt < 4) continue;
+        throw error;
+      }
+    }
+
+    return res.status(500).json({ success: false, code: 'KEY_GENERATION_FAILED', message: 'Не удалось создать уникальный ключ' });
   } catch (error) {
-    if (error?.code === 'SESSION_SECRET_MISSING') throw error;
-    return null;
+    console.error('create-key:', error);
+    const failure = databaseFailure(error, 'Ошибка создания ключа');
+    return res.status(failure.status).json({ success: false, code: failure.code, message: failure.message });
   }
-}
-
-export function bearerToken(req) {
-  const header = String(req.headers?.authorization || '');
-  const match = header.match(/^Bearer\s+(.+)$/i);
-  return match ? match[1].trim() : '';
-}
-
-export function requireSession(req, res) {
-  const session = verifySessionToken(bearerToken(req));
-  if (!session) {
-    res.status(401).json({ success: false, code: 'AUTH_REQUIRED', message: 'Требуется вход в аккаунт' });
-    return null;
-  }
-  return session;
-}
-
-export function requireRole(session, res, roles = ['creator', 'admin']) {
-  if (!session || !roles.includes(String(session.role || '').toLowerCase())) {
-    res.status(403).json({ success: false, code: 'ROLE_REQUIRED', message: 'Недостаточно прав' });
-    return false;
-  }
-  return true;
-}
-
-export function createLauncherTicket({ userId, hwid, expiresAt }) {
-  const payload = encoder({ sub: String(userId), hwid, exp: Math.floor(expiresAt / 1000), type: 'launcher' });
-  const signature = crypto.createHmac('sha256', secret()).update(payload).digest('base64url');
-  return `${payload}.${signature}`;
 }

@@ -1,4 +1,83 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090b10"><title>Админ-панель — Trivial</title><link rel="icon" href="/img/logo.svg"><link rel="stylesheet" href="/css/app.css"></head><body data-auth-required>
-<header class="site-header"><div class="header-shell"><a class="brand" href="/"><img src="/img/logo.svg" alt=""><span class="sr-only">Trivial</span></a><nav class="nav-links"><a href="/">Главная</a><a href="/profile">Профиль</a></nav><div class="header-actions"><a class="home-login" href="/profile">Назад</a></div></div></header>
-<main class="profile-page"><div class="container"><div class="profile-head"><div><span class="eyebrow">Creator tools</span><h1>Админ-панель</h1><p>Лицензионные ключи и состояние сервиса.</p></div></div><section class="profile-panel"><div class="admin-grid"><article class="admin-card"><h3>Создать ключ</h3><form id="keyCreator" class="form-grid"><div class="field"><label for="keyDuration">Срок</label><select id="keyDuration" name="duration"><option value="7">7 дней</option><option value="30" selected>30 дней</option><option value="90">90 дней</option><option value="365">365 дней</option></select></div><button class="btn btn-primary" type="submit">Создать ключ</button></form><div class="generated-key" id="generatedKey">Ключ появится здесь</div><button class="copy-btn" id="copyGeneratedKey" type="button" disabled>Копировать ключ</button><p class="status-message" id="adminStatus" aria-live="polite"></p></article><article class="admin-card"><h3>Статистика</h3><div class="details-list"><div class="detail-row"><span>Пользователи</span><strong id="statUsers">—</strong></div><div class="detail-row"><span>Активные подписки</span><strong id="statActive">—</strong></div><div class="detail-row"><span>Свободные ключи</span><strong id="statKeys">—</strong></div></div></article></div></section></div></main>
-<script src="/js/api.js"></script><script src="/js/auth-check.js"></script><script src="/js/header.js"></script><script src="/js/admin.js"></script></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Decide Visuals — приватный визуальный клиент с быстрым запуском, лицензией и личным кабинетом.">
+  <meta name="theme-color" content="#08080b">
+  <title>Decide Visuals — официальный сайт</title>
+  <link rel="icon" href="/img/logo.svg">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header home-header">
+  <div class="header-shell">
+    <a class="brand" href="/" aria-label="Decide Visuals — главная"><img src="/img/logo.svg" alt=""><span>Decide Visuals</span></a>
+    <nav class="nav-links" aria-label="Основная навигация">
+      <a href="#home">Главная</a><a href="#overview">Обзор</a><a href="#metrics">Метрики</a><a href="/purchase">Покупка</a>
+    </nav>
+    <div class="header-actions"><a class="home-login" data-account-link href="/signin">Регистрация</a><button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div>
+  </div>
+</header>
+<main class="home-main">
+  <section class="hero" id="home">
+    <div class="hero-backdrop"><i class="hero-orb one"></i><i class="hero-orb two"></i><i class="hero-orb three"></i></div>
+    <div class="container hero-content">
+      <span class="pill" data-reveal style="--delay:60ms">Decide Visuals · private access</span>
+      <h1 data-reveal style="--delay:140ms">Видишь больше.<br><span>Играешь чище.</span></h1>
+      <p data-reveal style="--delay:220ms">Визуальный клиент с аккуратным интерфейсом, быстрым запуском и настройками, которые не мешают игре.</p>
+      <div class="hero-actions" data-reveal style="--delay:300ms"><a class="btn btn-primary" href="/purchase">Получить доступ</a><a class="btn" href="#overview">Посмотреть обзор</a></div>
+    </div>
+    <div class="hero-scroll"><i></i>scroll</div>
+  </section>
+
+  <section class="section showcase" id="overview">
+    <div class="container">
+      <div class="section-heading" data-reveal><span class="eyebrow">Интерфейс</span><h2>Работает спокойно.<br>Выглядит точно.</h2><p>Один интерфейс для визуальных модулей, профилей и быстрых настроек. Без перегруза и лишних окон.</p></div>
+      <div class="showcase-frame" data-reveal>
+        <div class="showcase-top"><div class="window-controls"><i></i><i></i><i></i></div><div class="showcase-brand"><img src="/img/logo.svg" alt="">Decide Visuals</div><span>build 2.0</span></div>
+        <div class="showcase-body">
+          <aside class="client-side"><strong>Visual Center</strong><button class="active" data-slide="0">World</button><button data-slide="1">Targets</button><button data-slide="2">Interface</button><button data-slide="3">Profiles</button></aside>
+          <div class="client-canvas" id="clientCanvas">
+            <div class="game-horizon"></div><div class="game-glow"></div><div class="crosshair"></div>
+            <div class="module-panel"><h3 id="moduleTitle">World visuals</h3><div class="module-row"><span id="moduleOne">Atmosphere</span><i class="toggle-dot on"></i></div><div class="module-row"><span id="moduleTwo">Sky shader</span><i class="toggle-dot on"></i></div><div class="module-row"><span id="moduleThree">Bloom</span><i class="toggle-dot"></i></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="showcase-caption" data-reveal><div><h3 id="showcaseTitle">Гибкая настройка мира</h3><p id="showcaseText">Меняйте атмосферу и визуальные эффекты так, чтобы клиент ощущался частью игры, а не отдельной панелью поверх неё.</p></div><div class="slider-dots"><button class="slider-dot active" data-slide="0" aria-label="Слайд 1"></button><button class="slider-dot" data-slide="1" aria-label="Слайд 2"></button><button class="slider-dot" data-slide="2" aria-label="Слайд 3"></button><button class="slider-dot" data-slide="3" aria-label="Слайд 4"></button></div></div>
+    </div>
+  </section>
+
+  <section class="section metrics" id="metrics">
+    <div class="container">
+      <div class="section-heading" data-reveal><span class="eyebrow">Публичные метрики</span><h2>Просто цифры.</h2><p>Короткий статус проекта без лишней информации.</p></div>
+      <div class="metrics-shell hero-stats" data-reveal>
+        <div class="metric-copy"><strong>Decide Visuals</strong><span>актуальная стабильная сборка</span></div>
+        <div class="metric"><strong data-counter="4552">0</strong><span>пользователей</span></div>
+        <div class="metric"><strong data-counter="145824">0</strong><span>запусков</span></div>
+        <div class="metric"><strong>Сегодня</strong><span>последнее обновление</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section demo-section">
+    <div class="container demo-shell">
+      <div class="demo-copy" data-reveal><span class="eyebrow">Decide Core</span><h2>Меньше действий.<br>Больше контроля.</h2><p>Аккаунт, ключ и загрузка находятся в одном месте. После активации лицензии лаунчер становится доступен прямо в профиле.</p><div class="demo-list"><div><span>01</span>Создайте аккаунт</div><div><span>02</span>Активируйте ключ</div><div><span>03</span>Скачайте лаунчер</div></div></div>
+      <div class="demo-card" data-reveal><div class="demo-card-grid"></div><div class="demo-widget w1"><div class="widget-head"><span>VISUAL PROFILE</span><span>ONLINE</span></div><div class="widget-title">Night / soft purple</div><div class="bar"><i></i></div><div class="chips"><span>Bloom low</span><span>Shader sync</span><span>240 fps</span></div></div><div class="demo-widget w2"><div class="widget-head"><span>TARGET</span><span>VISIBLE</span></div><div class="widget-title">Rockstar ESP</div><div class="chips"><span>smooth</span><span>alpha 82%</span></div></div><div class="demo-widget w3"><div class="widget-head"><span>ACCOUNT</span><span>LICENSE</span></div><div class="widget-title">Access ready</div><div class="bar"><i style="width:100%"></i></div></div></div>
+    </div>
+  </section>
+
+  <section class="section pricing-section" id="pricing">
+    <div class="container">
+      <div class="section-heading" data-reveal><span class="eyebrow">Тарифы</span><h2>Выберите срок доступа.</h2><p>Функциональность одинаковая. Отличается только срок действия лицензии.</p></div>
+      <div class="pricing-grid">
+        <article class="price-card" data-reveal><h3>7 дней</h3><p>Короткий доступ, чтобы начать пользоваться Decide Visuals.</p><div class="price-value"><strong>399₽</strong><span>/ неделя</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn" href="/purchase">Выбрать</a></article>
+        <article class="price-card featured" data-reveal style="--delay:80ms"><span class="price-badge">Популярный</span><h3>30 дней</h3><p>Основной вариант для постоянного использования клиента.</p><div class="price-value"><strong>899₽</strong><span>/ месяц</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn btn-primary" href="/purchase">Выбрать</a></article>
+        <article class="price-card" data-reveal style="--delay:160ms"><h3>90 дней</h3><p>Максимальный срок с самой низкой стоимостью одного дня.</p><div class="price-value"><strong>1799₽</strong><span>/ 3 месяца</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn" href="/purchase">Выбрать</a></article>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>Decide Visuals</span></a><p>Визуальный клиент с приватным доступом, лицензиями и защищённой загрузкой.</p></div><div class="footer-col"><h4>Платформа</h4><a href="/">Главная</a><a href="/purchase">Покупка</a><a href="#overview">Обзор</a></div><div class="footer-col"><h4>Аккаунт</h4><a href="/signin">Вход</a><a href="/signup">Регистрация</a><a href="/profile">Профиль</a></div><div class="footer-col"><h4>Соглашения</h4><a href="/public-offer">Публичная оферта</a><span>Политика конфиденциальности</span></div></div><div class="footer-bottom"><span>© 2026 Decide Visuals</span><span>All rights reserved</span></div></div></footer>
+<script src="/js/api.js"></script><script src="/js/header.js"></script><script src="/js/home.js"></script>
+</body></html>

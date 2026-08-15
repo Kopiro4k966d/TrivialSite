@@ -46,4 +46,4 @@ app.use((error, _req, res, _next) => {
   return res.status(500).json({ success: false, code: 'INTERNAL_ERROR', message: 'Внутренняя ошибка сервера' });
 });
 
-app.listen(port, () => console.log(`Trivial site: http://localhost:${port}`));
+app.listen(port, () => console.log(`Decide Visuals: http://localhost:${port}`));

@@ -1,26 +1,26 @@
-export function subscriptionInfo(value) {
-  const date = value ? new Date(value) : null;
-  const timestamp = date && !Number.isNaN(date.getTime()) ? date.getTime() : 0;
-  const active = timestamp > Date.now();
-  return {
-    active,
-    until: timestamp ? new Date(timestamp).toISOString() : null,
-    remainingDays: active ? Math.max(1, Math.ceil((timestamp - Date.now()) / 86400000)) : 0
-  };
-}
+(() => {
+  const header = document.querySelector('.site-header');
+  const toggle = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('.nav-links');
+  const update = () => header?.classList.toggle('is-scrolled', window.scrollY > 24);
+  update(); window.addEventListener('scroll', update, { passive: true });
 
-export function publicUser(row) {
-  const subscription = subscriptionInfo(row.subscription);
-  return {
-    id: row.id,
-    username: row.username,
-    email: row.email,
-    role: row.role || 'user',
-    subscription: subscription.until,
-    subscription_active: subscription.active,
-    subscription_days: subscription.remainingDays,
-    hwid: row.hwid || null,
-    avatar: row.avatar || null,
-    created_at: row.created_at
-  };
-}
+  if (toggle && nav) {
+    toggle.addEventListener('click', event => {
+      event.stopPropagation();
+      const open = nav.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    nav.addEventListener('click', event => {
+      if (event.target.closest('a')) { nav.classList.remove('is-open'); toggle.setAttribute('aria-expanded', 'false'); }
+    });
+    document.addEventListener('click', event => {
+      if (!header?.contains(event.target)) { nav.classList.remove('is-open'); toggle.setAttribute('aria-expanded', 'false'); }
+    });
+  }
+
+  const user = window.DecideAPI?.user();
+  document.querySelectorAll('[data-account-link]').forEach(link => {
+    if (user?.username) { link.textContent = user.username; link.href = '/profile'; }
+  });
+})();

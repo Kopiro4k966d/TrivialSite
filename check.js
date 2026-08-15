@@ -1,43 +1,75 @@
-(() => {
-  const header = document.querySelector('.home-header');
-  const setHeaderState = () => header?.classList.toggle('is-scrolled', window.scrollY > 28);
-  setHeaderState();
-  window.addEventListener('scroll', setHeaderState, { passive: true });
+const setStatus = (element, message, type = '') => {
+  if (!element) return;
+  element.textContent = message;
+  element.className = `status-message ${type}`.trim();
+};
 
-  const reveal = document.querySelectorAll('[data-reveal]');
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-revealed');
-        observer.unobserve(entry.target);
-      });
-    }, { threshold: .12, rootMargin: '0px 0px -30px' });
-    reveal.forEach(el => observer.observe(el));
-  } else reveal.forEach(el => el.classList.add('is-revealed'));
+async function submit(path, payload) {
+  return window.DecideAPI.api(path, { method: 'POST', body: JSON.stringify(payload) });
+}
 
-  let countersStarted = false;
-  const counterRoot = document.querySelector('.hero-stats');
-  const runCounters = () => {
-    if (countersStarted) return;
-    countersStarted = true;
-    document.querySelectorAll('[data-counter]').forEach(el => {
-      const target = Number(el.dataset.counter || 0);
-      const start = performance.now();
-      const duration = 900;
-      const frame = now => {
-        const t = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - t, 3);
-        el.textContent = Math.round(target * eased).toLocaleString('ru-RU');
-        if (t < 1) requestAnimationFrame(frame);
-      };
-      requestAnimationFrame(frame);
+function safeNextPage() {
+  const value = new URLSearchParams(location.search).get('next');
+  if (!value) return '/profile';
+  try {
+    const target = new URL(value, location.origin);
+    if (target.origin !== location.origin) return '/profile';
+    const allowed = new Set(['/', '/profile', '/purchase', '/admin-panel', '/payment-success', '/public-offer']);
+    if (!allowed.has(target.pathname)) return '/profile';
+    return `${target.pathname}${target.search}${target.hash}`;
+  } catch {
+    return '/profile';
+  }
+}
+
+const signinForm = document.getElementById('signinForm');
+if (signinForm) signinForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  const status = document.getElementById('formStatus');
+  const button = signinForm.querySelector('button[type="submit"]');
+  button.disabled = true;
+  button.textContent = 'Входим…';
+  setStatus(status, 'Проверяем данные…');
+  try {
+    const data = await submit('login', { username: signinForm.login.value.trim(), password: signinForm.password.value });
+    window.DecideAPI.saveSession(data);
+    setStatus(status, 'Вход выполнен. Открываем профиль…', 'success');
+    setTimeout(() => { location.href = safeNextPage(); }, 300);
+  } catch (error) {
+    setStatus(status, error.message, 'error');
+    button.disabled = false;
+    button.textContent = 'Войти';
+  }
+});
+
+const signupForm = document.getElementById('signupForm');
+if (signupForm) signupForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  const status = document.getElementById('formStatus');
+  const button = signupForm.querySelector('button[type="submit"]');
+  if (signupForm.password.value !== signupForm.passwordConfirm.value) {
+    setStatus(status, 'Пароли не совпадают', 'error');
+    return;
+  }
+  if (signupForm.password.value.length < 8) {
+    setStatus(status, 'Пароль должен содержать минимум 8 символов', 'error');
+    return;
+  }
+  button.disabled = true;
+  button.textContent = 'Создаём…';
+  setStatus(status, 'Создаём аккаунт…');
+  try {
+    const data = await submit('register', {
+      username: signupForm.username.value.trim(),
+      email: signupForm.email.value.trim(),
+      password: signupForm.password.value
     });
-  };
-  if (counterRoot && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) { runCounters(); observer.disconnect(); }
-    }, { threshold: .2 });
-    observer.observe(counterRoot);
-  } else runCounters();
-})();
+    window.DecideAPI.saveSession(data);
+    setStatus(status, 'Аккаунт создан. Открываем профиль…', 'success');
+    setTimeout(() => { location.href = '/profile'; }, 300);
+  } catch (error) {
+    setStatus(status, error.message, 'error');
+    button.disabled = false;
+    button.textContent = 'Создать аккаунт';
+  }
+});
