@@ -4,48 +4,92 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Decide Visuals — приватный визуальный клиент с быстрым запуском, лицензией и личным кабинетом.">
-  <meta name="theme-color" content="#08080b">
+  <meta name="theme-color" content="#08080c">
   <title>Decide Visuals — официальный сайт</title>
-  <link rel="icon" href="/img/decide-mark-v3.png?v=4">
-  <link rel="stylesheet" href="/css/decide-v7.css?v=7">
+  <link rel="icon" href="/img/decide-mark-v3.png?v=8">
+  <link rel="stylesheet" href="/css/decide-v8.css?v=8">
 </head>
 <body>
 <header class="site-header home-header">
   <div class="header-shell">
-    <a class="brand" href="/" aria-label="Decide Visuals — главная"><img src="/img/decide-mark-v3.png?v=4" alt=""><span>Decide Visuals</span></a>
+    <a class="brand" href="/" aria-label="Decide Visuals — главная"><img src="/img/decide-mark-v3.png?v=8" alt=""><span>Decide Visuals</span></a>
     <nav class="nav-links" aria-label="Основная навигация">
-      <a href="#home">Главная</a><a href="#overview">Обзор</a><a href="#metrics">Метрики</a><a href="/purchase">Покупка</a>
+      <a href="#home" class="active">Главная</a>
+      <a href="#overview">Обзор</a>
+      <a href="#features">Возможности</a>
+      <a href="#pricing">Тарифы</a>
     </nav>
-    <div class="header-actions"><a class="home-login" data-account-link href="/signin">Регистрация</a><button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div>
+    <div class="header-actions"><a class="home-login" data-account-link href="/signin">Аккаунт</a><button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button></div>
   </div>
 </header>
+
 <main class="home-main">
   <section class="hero" id="home">
     <div class="hero-backdrop"><i class="hero-orb one"></i><i class="hero-orb two"></i><i class="hero-orb three"></i></div>
-    <div class="container hero-content">
-      <span class="pill" data-reveal style="--delay:60ms">Decide Visuals · private access</span>
-      <h1 data-reveal style="--delay:140ms">Видишь больше.<br><span>Играешь чище.</span></h1>
-      <p data-reveal style="--delay:220ms">Визуальный клиент с аккуратным интерфейсом, быстрым запуском и настройками, которые не мешают игре.</p>
-      <div class="hero-actions" data-reveal style="--delay:300ms"><a class="btn btn-primary" href="/purchase">Получить доступ</a><a class="btn" href="#overview">Посмотреть обзор</a></div>
+    <div class="hero-layout">
+      <div class="hero-copy">
+        <span class="pill" data-reveal>Private visual client</span>
+        <h1 data-reveal style="--delay:80ms">Чистый визуал.<br><span>Точный контроль.</span></h1>
+        <p data-reveal style="--delay:150ms">Decide Visuals собран вокруг одного принципа: нужные настройки должны быть рядом, а интерфейс — не мешать игре.</p>
+        <div class="hero-actions" data-reveal style="--delay:220ms"><a class="btn btn-primary" href="/purchase">Получить доступ</a><a class="btn" href="#overview">Смотреть интерфейс</a></div>
+        <div class="hero-meta" data-reveal style="--delay:290ms" data-stagger>
+          <div><strong>Private access</strong><span>лицензия через ключ</span></div>
+          <div><strong>Protected</strong><span>загрузка из профиля</span></div>
+          <div><strong>Fast setup</strong><span>один аккаунт</span></div>
+        </div>
+      </div>
+
+      <div class="hero-visual" data-reveal style="--delay:130ms">
+        <div class="hero-panel">
+          <div class="hero-panel-top"><div class="hero-panel-brand"><img src="/img/decide-mark-v3.png?v=8" alt=""><span>Decide Visuals</span></div><div class="hero-panel-dots"><i></i><i></i><i></i></div></div>
+          <div class="hero-ui">
+            <div class="hero-ui-nav"><span class="active">World</span><span>Targets</span><span>Interface</span><span>Profiles</span></div>
+            <div class="hero-ui-main">
+              <div class="hero-ui-title"><strong>Visual profile</strong><span>ACTIVE</span></div>
+              <div class="hero-control"><div class="hero-control-row"><span>Shader sync</span><span class="switch on"><i></i></span></div><div class="hero-slider"><i style="width:82%"></i></div></div>
+              <div class="hero-control"><div class="hero-control-row"><span>Target ESP</span><span class="switch on"><i></i></span></div><div class="hero-slider"><i style="width:66%"></i></div></div>
+              <div class="hero-control"><div class="hero-control-row"><span>Name tags</span><span class="switch on"><i></i></span></div><div class="hero-slider"><i style="width:54%"></i></div></div>
+              <div class="hero-control"><div class="hero-control-row"><span>Bloom</span><span class="switch"><i></i></span></div><div class="hero-slider"><i style="width:28%"></i></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-float"><span>Current profile</span><strong>Night / soft purple</strong><div class="hero-float-bar"><i></i></div></div>
+      </div>
     </div>
-    <div class="hero-scroll"><i></i>ниже</div>
+    <div class="hero-scroll"><i></i>scroll</div>
   </section>
 
   <section class="section showcase" id="overview">
     <div class="container">
-      <div class="section-heading" data-reveal><span class="eyebrow">Интерфейс</span><h2>Работает спокойно.<br>Выглядит точно.</h2><p>Один интерфейс для визуальных модулей, профилей и быстрых настроек. Без перегруза и лишних окон.</p></div>
+      <div class="section-heading" data-reveal>
+        <span class="eyebrow">01 · Интерфейс</span>
+        <div class="section-heading-main"><h2>Работает спокойно.<br>Выглядит точно.</h2><p>Не набор отдельных окон, а единая рабочая среда для визуальных модулей, профилей и быстрых настроек.</p></div>
+      </div>
       <div class="showcase-video" data-reveal>
-        <video class="visuals-video" autoplay muted loop playsinline preload="metadata" aria-label="Демонстрация Decide Visuals">
-          <source src="/video/Visuals.mp4" type="video/mp4">
-        </video>
+        <video class="visuals-video" autoplay muted loop playsinline preload="metadata" aria-label="Демонстрация Decide Visuals"><source src="/video/Visuals.mp4" type="video/mp4"></video>
+      </div>
+      <div class="showcase-caption" data-reveal><strong>Visuals.mp4 · реальный интерфейс</strong><span>Видео автоматически останавливается вне экрана</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-heading" data-reveal>
+        <span class="eyebrow">02 · Возможности</span>
+        <div class="section-heading-main"><h2>Только то, что действительно нужно.</h2><p>Структура интерфейса построена так, чтобы настройки находились быстро и не требовали лишних действий.</p></div>
+      </div>
+      <div class="feature-stack" data-reveal data-stagger>
+        <article class="feature-row"><span class="feature-number">01</span><div><h3>Визуальные профили</h3><span class="feature-badge">Quick switch</span></div><p>Сохраняйте наборы настроек и переключайтесь между ними без повторной настройки каждого модуля.</p></article>
+        <article class="feature-row"><span class="feature-number">02</span><div><h3>Единый интерфейс</h3><span class="feature-badge">Clean UI</span></div><p>World, Targets и Interface собраны в одной логичной системе с одинаковым поведением элементов.</p></article>
+        <article class="feature-row"><span class="feature-number">03</span><div><h3>Лицензия и запуск</h3><span class="feature-badge">Protected</span></div><p>Ключ активируется в профиле, а загрузка лаунчера открывается только при активной подписке.</p></article>
       </div>
     </div>
   </section>
 
   <section class="section metrics" id="metrics">
     <div class="container">
-      <div class="section-heading" data-reveal><span class="eyebrow">Публичные метрики</span><h2>Просто цифры.</h2><p>Короткий статус проекта без лишней информации.</p></div>
-      <div class="metrics-shell hero-stats" data-reveal>
+      <div class="section-heading" data-reveal><span class="eyebrow">03 · Статус</span><div class="section-heading-main"><h2>Коротко о проекте.</h2><p>Без лишней статистики — только основные показатели актуальной сборки Decide Visuals.</p></div></div>
+      <div class="metrics-shell" data-reveal data-stagger>
         <div class="metric-copy"><strong>Decide Visuals</strong><span>актуальная стабильная сборка</span></div>
         <div class="metric"><strong data-counter="4552">0</strong><span>пользователей</span></div>
         <div class="metric"><strong data-counter="145824">0</strong><span>запусков</span></div>
@@ -55,24 +99,25 @@
   </section>
 
   <section class="section demo-section">
-    <div class="container demo-shell">
-      <div class="demo-copy" data-reveal><span class="eyebrow">Decide Core</span><h2>Меньше действий.<br>Больше контроля.</h2><p>Аккаунт, ключ и загрузка находятся в одном месте. После активации лицензии лаунчер становится доступен прямо в профиле.</p><div class="demo-list"><div><span>01</span>Создайте аккаунт</div><div><span>02</span>Активируйте ключ</div><div><span>03</span>Скачайте лаунчер</div></div></div>
+    <div class="demo-shell">
+      <div class="demo-copy" data-reveal><span class="eyebrow">04 · Decide Core</span><h2>От покупки<br>до запуска — три шага.</h2><p>Аккаунт, лицензия и загрузка лаунчера связаны между собой. Никаких отдельных кабинетов и лишних переходов.</p><div class="demo-list" data-stagger><div><span>01</span>Создайте аккаунт</div><div><span>02</span>Активируйте ключ</div><div><span>03</span>Скачайте лаунчер</div></div></div>
       <div class="demo-card" data-reveal><div class="demo-card-grid"></div><div class="demo-widget w1"><div class="widget-head"><span>VISUAL PROFILE</span><span>ONLINE</span></div><div class="widget-title">Night / soft purple</div><div class="bar"><i></i></div><div class="chips"><span>Bloom low</span><span>Shader sync</span><span>240 fps</span></div></div><div class="demo-widget w2"><div class="widget-head"><span>TARGET</span><span>VISIBLE</span></div><div class="widget-title">Rockstar ESP</div><div class="chips"><span>smooth</span><span>alpha 82%</span></div></div><div class="demo-widget w3"><div class="widget-head"><span>ACCOUNT</span><span>LICENSE</span></div><div class="widget-title">Access ready</div><div class="bar"><i style="width:100%"></i></div></div></div>
     </div>
   </section>
 
   <section class="section pricing-section" id="pricing">
     <div class="container">
-      <div class="section-heading" data-reveal><span class="eyebrow">Тарифы</span><h2>Выберите срок доступа.</h2><p>Функциональность одинаковая. Отличается только срок действия лицензии.</p></div>
-      <div class="pricing-grid">
-        <article class="price-card" data-reveal><h3>7 дней</h3><p>Короткий доступ, чтобы начать пользоваться Decide Visuals.</p><div class="price-value"><strong>399₽</strong><span>/ неделя</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn" href="/purchase">Выбрать</a></article>
-        <article class="price-card featured" data-reveal style="--delay:80ms"><span class="price-badge">Популярный</span><h3>30 дней</h3><p>Основной вариант для постоянного использования клиента.</p><div class="price-value"><strong>899₽</strong><span>/ месяц</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn btn-primary" href="/purchase">Выбрать</a></article>
-        <article class="price-card" data-reveal style="--delay:160ms"><h3>90 дней</h3><p>Максимальный срок с самой низкой стоимостью одного дня.</p><div class="price-value"><strong>1799₽</strong><span>/ 3 месяца</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn" href="/purchase">Выбрать</a></article>
+      <div class="section-heading" data-reveal><span class="eyebrow">05 · Тарифы</span><div class="section-heading-main"><h2>Одинаковый клиент.<br>Разный срок доступа.</h2><p>На всех тарифах доступна полная функциональность Decide Visuals. Выберите только удобный срок.</p></div></div>
+      <div class="pricing-grid" data-stagger>
+        <article class="price-card"><h3>7 дней</h3><p>Для знакомства с клиентом и короткого периода использования.</p><div class="price-value"><strong>399₽</strong><span>/ неделя</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn" href="/purchase">Выбрать</a></article>
+        <article class="price-card featured"><span class="price-badge">Популярный</span><h3>30 дней</h3><p>Оптимальный вариант для постоянного использования.</p><div class="price-value"><strong>899₽</strong><span>/ месяц</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn btn-primary" href="/purchase">Выбрать</a></article>
+        <article class="price-card"><h3>90 дней</h3><p>Самая низкая стоимость одного дня и длительный доступ.</p><div class="price-value"><strong>1799₽</strong><span>/ 3 месяца</span></div><div class="price-features"><span>Полный доступ</span><span>Личный кабинет</span><span>Защищённый лаунчер</span></div><a class="btn" href="/purchase">Выбрать</a></article>
       </div>
     </div>
   </section>
 </main>
-<footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/"><img src="/img/decide-mark-v3.png?v=4" alt=""><span>Decide Visuals</span></a><p>Визуальный клиент с приватным доступом, лицензиями и защищённой загрузкой.</p></div><div class="footer-col"><h4>Платформа</h4><a href="/">Главная</a><a href="/purchase">Покупка</a><a href="#overview">Обзор</a></div><div class="footer-col"><h4>Аккаунт</h4><a href="/signin">Вход</a><a href="/signup">Регистрация</a><a href="/profile">Профиль</a></div><div class="footer-col"><h4>Соглашения</h4><a href="/public-offer">Публичная оферта</a><span>Политика конфиденциальности</span></div></div><div class="footer-bottom"><span>© 2026 Decide Visuals</span><span>All rights reserved</span></div></div></footer>
-<script src="/js/api.js"></script><script src="/js/header.js"></script><script src="/js/home-v7.js?v=7"></script>
-<script src="/js/ui-v7.js?v=7"></script>
-</body></html>
+
+<footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/"><img src="/img/decide-mark-v3.png?v=8" alt=""><span>Decide Visuals</span></a><p>Приватный визуальный клиент с лицензиями, личным кабинетом и защищённой загрузкой.</p></div><div class="footer-col"><h4>Платформа</h4><a href="/">Главная</a><a href="/purchase">Покупка</a><a href="#overview">Обзор</a></div><div class="footer-col"><h4>Аккаунт</h4><a href="/signin">Вход</a><a href="/signup">Регистрация</a><a href="/profile">Профиль</a></div><div class="footer-col"><h4>Документы</h4><a href="/public-offer">Публичная оферта</a><span>Политика конфиденциальности</span></div></div><div class="footer-bottom"><span>© 2026 Decide Visuals</span><span>All rights reserved</span></div></div></footer>
+<script src="/js/api.js"></script><script src="/js/header.js"></script><script src="/js/home-v8.js?v=8"></script><script src="/js/ui-v8.js?v=8"></script>
+</body>
+</html>
