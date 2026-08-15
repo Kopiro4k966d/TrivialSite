@@ -637,3 +637,253 @@ body.reveal-ready .reveal.is-visible{
     transition:none!important;
   }
 }
+
+/* ===== Decide Visuals V6 — calm micro-interactions ===== */
+:root{
+  --ease-ui:cubic-bezier(.22,.61,.36,1);
+  --ease-soft:cubic-bezier(.2,.75,.25,1);
+  --accent-glow:rgba(197,140,247,.20);
+}
+
+::selection{background:rgba(197,140,247,.26);color:#fff}
+
+/* Accessible interaction states */
+a,button,input,.price-card,.metric,.demo-widget,.showcase-video{ -webkit-tap-highlight-color:transparent }
+a:focus-visible,button:focus-visible,input:focus-visible{
+  outline:2px solid rgba(207,160,247,.75);
+  outline-offset:3px;
+}
+
+/* Very thin reading progress — visible, but never distracting */
+.scroll-progress{
+  position:fixed;
+  z-index:140;
+  left:0;
+  top:0;
+  width:100%;
+  height:2px;
+  pointer-events:none;
+  transform:scaleX(0);
+  transform-origin:0 50%;
+  background:linear-gradient(90deg,#a66ee9,#d79cff);
+  box-shadow:0 0 12px rgba(197,140,247,.26);
+  will-change:transform;
+}
+
+/* Header softly settles in on first paint */
+.site-header{
+  transition:transform .35s var(--ease-ui),opacity .35s ease;
+}
+body.motion-ready .site-header{
+  animation:headerSettle .55s var(--ease-soft) both;
+}
+@keyframes headerSettle{
+  from{opacity:0;transform:translateY(-10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.nav-links a{
+  position:relative;
+  transition:color .22s ease,background-color .22s ease;
+}
+.nav-links a.is-active{
+  color:#f6f2ff;
+  background:rgba(255,255,255,.055);
+}
+.nav-links a.is-active::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:4px;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:var(--accent);
+  transform:translateX(-50%);
+  box-shadow:0 0 10px var(--accent);
+}
+
+/* Hero ambience is slower and more controlled */
+.hero-orb{animation-duration:15s;opacity:.22}
+.hero .pill::before{animation:pillPulse 2.8s ease-in-out infinite}
+@keyframes pillPulse{
+  0%,100%{opacity:.72;box-shadow:0 0 8px rgba(197,140,247,.36)}
+  50%{opacity:1;box-shadow:0 0 16px rgba(197,140,247,.58)}
+}
+.hero-scroll{animation:scrollHint 2.7s ease-in-out infinite}
+@keyframes scrollHint{
+  0%,100%{opacity:.48;transform:translateX(-50%) translateY(0)}
+  50%{opacity:.92;transform:translateX(-50%) translateY(4px)}
+}
+
+/* Buttons: one-pixel feedback and a quiet highlight */
+.btn,.home-login{
+  position:relative;
+  overflow:hidden;
+  transition:
+    transform .22s var(--ease-ui),
+    background-color .22s ease,
+    border-color .22s ease,
+    color .22s ease,
+    box-shadow .22s ease,
+    opacity .22s ease !important;
+}
+.btn:hover,.home-login:hover{transform:translateY(-1px)!important}
+.btn:active,.home-login:active{transform:translateY(0) scale(.985)!important}
+.btn-primary::before,.home-login::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background:linear-gradient(110deg,transparent 24%,rgba(255,255,255,.24) 48%,transparent 72%);
+  transform:translateX(-135%);
+  transition:transform .65s var(--ease-soft);
+  pointer-events:none;
+}
+.btn-primary:hover::before,.home-login:hover::before{transform:translateX(135%)}
+.hero-actions .btn-primary::after{
+  content:"→";
+  margin-left:1px;
+  transition:transform .22s var(--ease-ui);
+}
+.hero-actions .btn-primary:hover::after{transform:translateX(3px)}
+
+/* Reveal remains soft; grouped content gets a natural stagger after its parent appears */
+body.reveal-ready [data-reveal],body.reveal-ready .reveal{
+  transform:translate3d(0,16px,0) scale(.997);
+  transition:
+    opacity .72s var(--ease-soft),
+    transform .72s var(--ease-soft);
+  transition-delay:var(--delay,0ms);
+}
+body.reveal-ready [data-reveal].is-revealed,body.reveal-ready .reveal.is-visible{
+  transform:translate3d(0,0,0) scale(1);
+}
+
+.metrics-shell.is-revealed .metric-copy,
+.metrics-shell.is-revealed .metric{
+  animation:childSettle .55s var(--ease-soft) both;
+}
+.metrics-shell.is-revealed .metric:nth-child(2){animation-delay:.05s}
+.metrics-shell.is-revealed .metric:nth-child(3){animation-delay:.10s}
+.metrics-shell.is-revealed .metric:nth-child(4){animation-delay:.15s}
+.demo-copy.is-revealed .demo-list>div{animation:childSettle .55s var(--ease-soft) both}
+.demo-copy.is-revealed .demo-list>div:nth-child(2){animation-delay:.07s}
+.demo-copy.is-revealed .demo-list>div:nth-child(3){animation-delay:.14s}
+@keyframes childSettle{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+
+/* Video feels integrated into the page rather than like a static block */
+.showcase-video{
+  position:relative;
+  isolation:isolate;
+  transition:border-color .28s ease,box-shadow .28s ease,transform .28s var(--ease-ui);
+}
+.showcase-video::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.showcase-video:hover{
+  transform:translateY(-2px);
+  border-color:rgba(197,140,247,.17);
+  box-shadow:0 25px 72px rgba(0,0,0,.25),0 0 0 1px rgba(197,140,247,.025);
+}
+.visuals-video{transition:transform .6s var(--ease-soft)}
+.showcase-video:hover .visuals-video{transform:scale(1.006)}
+
+/* Metrics: no jump, just responsive light */
+.metric{
+  transition:background-color .24s ease,border-color .24s ease !important;
+}
+.metric:hover{background:rgba(255,255,255,.018)}
+.metric strong{transition:color .22s ease}
+.metric:hover strong{color:#e3c5fb}
+
+/* Demo widgets float by only a few pixels */
+.demo-widget{
+  transition:border-color .25s ease,box-shadow .25s ease,transform .25s var(--ease-ui) !important;
+  animation:widgetDrift 7.5s ease-in-out infinite;
+}
+.demo-widget.w2{animation-delay:-2.1s;animation-duration:8.5s}
+.demo-widget.w3{animation-delay:-4.3s;animation-duration:9.5s}
+@keyframes widgetDrift{
+  0%,100%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(0,-4px,0)}
+}
+.demo-card:hover .demo-widget{animation-play-state:paused}
+.demo-widget:hover{
+  transform:translate3d(0,-3px,0)!important;
+  border-color:rgba(197,140,247,.18);
+  box-shadow:0 22px 52px rgba(0,0,0,.27);
+}
+
+/* Pricing: clearer selection without an aggressive effect */
+.price-card{
+  transition:
+    transform .28s var(--ease-ui),
+    border-color .28s ease,
+    background-color .28s ease,
+    box-shadow .28s ease !important;
+}
+.price-card:hover{
+  transform:translateY(-3px)!important;
+  border-color:rgba(197,140,247,.18);
+  box-shadow:0 18px 46px rgba(0,0,0,.16);
+}
+.price-card.featured{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 18px 48px rgba(111,66,154,.06);
+}
+.price-features span{transition:color .2s ease,transform .2s var(--ease-ui)}
+.price-card:hover .price-features span{color:#c7c0cd}
+
+/* Footer links have a small directional cue */
+.footer-col a{
+  display:table;
+  transition:color .2s ease,transform .2s var(--ease-ui);
+}
+.footer-col a:hover{transform:translateX(2px)}
+
+/* Forms: quiet but responsive */
+.auth-minimal .field input{
+  transition:border-color .22s ease,background-color .22s ease,box-shadow .22s ease;
+}
+.auth-minimal .field input:hover{border-color:rgba(255,255,255,.13)}
+.auth-shell.auth-minimal{
+  animation:authEnter .55s var(--ease-soft) both;
+}
+@keyframes authEnter{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+
+/* Mobile menu opens without snapping */
+@media(max-width:900px){
+  .nav-links.is-open{animation:mobileMenuIn .22s var(--ease-soft) both}
+  @keyframes mobileMenuIn{
+    from{opacity:0;transform:translateY(-6px) scale(.985)}
+    to{opacity:1;transform:none}
+  }
+}
+
+@media(max-width:560px){
+  .showcase-video:hover{transform:none}
+  .price-card:hover{transform:none!important}
+  .btn:hover,.home-login:hover{transform:none!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .site-header,.hero-orb,.hero .pill::before,.hero-scroll,.demo-widget,.auth-shell.auth-minimal{
+    animation:none!important;
+  }
+  .showcase-video:hover,.showcase-video:hover .visuals-video,.price-card:hover,.demo-widget:hover,.footer-col a:hover,
+  .btn:hover,.home-login:hover,.btn:active,.home-login:active{
+    transform:none!important;
+  }
+  .btn-primary::before,.home-login::before{display:none}
+  .scroll-progress{display:none}
+}
