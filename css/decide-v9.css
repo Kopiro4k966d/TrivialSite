@@ -241,3 +241,104 @@ body{font-family:"Manrope",Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,
   .hero-type-art{min-height:265px}.type-art-kicker span:last-child{display:none}.type-art-decide{font-size:clamp(34px,13vw,47px)}.type-art-visuals{font-size:clamp(41px,16vw,58px)}
 }
 @media(prefers-reduced-motion:reduce){.hero-type-art:hover .type-art-visuals{text-shadow:none}}
+
+/* ---------- V10 softer minimal landing + progressive modules ---------- */
+body::before{
+  background:
+    radial-gradient(circle at 18% 7%,rgba(184,118,255,.06),transparent 27%),
+    radial-gradient(circle at 86% 17%,rgba(108,86,255,.035),transparent 24%),
+    linear-gradient(180deg,#09090d 0%,#08080c 55%,#09090d 100%);
+}
+body::after{opacity:.012;background-size:88px 88px}
+
+.site-header.is-scrolled{background:rgba(8,8,12,.86);backdrop-filter:blur(14px) saturate(120%)}
+.btn,.home-login{border-radius:10px;box-shadow:none}
+.btn-primary{box-shadow:0 10px 28px rgba(164,103,232,.12)}
+.btn-primary:hover{box-shadow:0 12px 32px rgba(164,103,232,.16)}
+
+.hero{min-height:720px;padding-top:142px;padding-bottom:92px}
+.hero-orb{opacity:.1;filter:blur(105px)}
+.hero-orb.three{display:none}
+.hero-copy h1{max-width:590px}
+.hero-copy>p{max-width:480px;color:#96909e}
+.hero-meta{gap:24px;margin-top:36px;padding-top:18px}
+.hero-type-art{min-height:430px;border-color:rgba(255,255,255,.07)}
+.hero-type-art::before{opacity:.52;filter:blur(22px)}
+.hero-type-art::after{opacity:.55}
+.type-art-index{opacity:.6}
+
+.section{padding:104px 0;border-bottom-color:rgba(255,255,255,.052)}
+.section-heading{grid-template-columns:185px 1fr;gap:42px;margin-bottom:44px}
+.section-heading-main h2,.section-heading h2{font-size:clamp(37px,4.4vw,56px)}
+.section-heading-main p,.section-heading>p{max-width:490px;color:#918b98}
+.section-reveal-line{width:min(420px,58vw);background:linear-gradient(90deg,transparent,rgba(199,144,255,.14),transparent)}
+
+.showcase-video{border-radius:16px;border-color:rgba(255,255,255,.085);box-shadow:0 18px 48px rgba(0,0,0,.18)}
+.showcase-video:hover{transform:translateY(-2px);box-shadow:0 22px 58px rgba(0,0,0,.22)}
+
+.feature-row{min-height:166px;grid-template-columns:72px 1fr 1fr;gap:38px;padding:29px 0}
+.feature-row:hover{padding-left:4px;padding-right:4px;background:rgba(255,255,255,.008)}
+.feature-row h3{font-size:25px}
+.feature-badge{border-radius:6px;background:transparent}
+
+.metrics-shell{border-radius:14px;border-color:rgba(255,255,255,.065);background:rgba(255,255,255,.055)}
+.metric-copy,.metric{min-height:112px;background:#0b0b11}
+.metric-copy:hover,.metric:hover{background:#0d0d13}
+.metric strong,.metric-copy strong{font-size:24px}
+
+.demo-shell{gap:58px}
+.demo-card{min-height:430px;border-radius:17px;background:#0b0b11;box-shadow:0 18px 46px rgba(0,0,0,.16)}
+.demo-card-grid{opacity:.085;background-size:52px 52px}
+.demo-card::after{opacity:.55}
+.demo-widget{border-radius:11px;background:rgba(15,15,21,.92);box-shadow:0 12px 34px rgba(0,0,0,.2);animation:none}
+.demo-list>div:hover{padding-left:3px}
+
+.pricing-grid{gap:10px}
+.price-card{min-height:350px;padding:25px;border-radius:14px;background:#0b0b11}
+.price-card.featured{background:linear-gradient(180deg,rgba(199,144,255,.045),#0b0b11 28%)}
+.price-card:hover{transform:translateY(-2px);background:#0d0d13;box-shadow:0 16px 42px rgba(0,0,0,.14)}
+.price-badge{border-radius:6px}
+
+.site-footer{padding-top:54px}
+
+.motion-ready [data-module-reveal]{
+  opacity:0;
+  filter:blur(5px);
+  transform:translate3d(0,28px,0) scale(.992);
+  transition:
+    opacity .78s var(--ease),
+    transform .9s var(--ease-out),
+    filter .72s ease;
+  transition-delay:var(--module-delay,0ms);
+  will-change:opacity,transform,filter;
+}
+.motion-ready [data-module-reveal].is-module-visible{
+  opacity:1;
+  filter:blur(0);
+  transform:none;
+}
+
+@media(max-width:700px){
+  .section{padding:74px 0}
+  .section-heading{gap:12px;margin-bottom:30px}
+  .feature-row{min-height:auto;padding:22px 0}
+  .demo-card{min-height:370px}
+  .price-card{min-height:320px}
+  .motion-ready [data-module-reveal]{transform:translate3d(0,20px,0);filter:blur(3px)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .motion-ready [data-module-reveal]{opacity:1!important;filter:none!important;transform:none!important;transition:none!important}
+}
+
+/* Keep progressive child reveals independent from legacy stagger groups. */
+.motion-ready [data-module-reveal]:not(.is-module-visible){
+  opacity:0;
+  filter:blur(5px);
+  transform:translate3d(0,28px,0) scale(.992);
+}
+.motion-ready [data-module-reveal].is-module-visible{
+  opacity:1;
+  filter:blur(0);
+  transform:none;
+}

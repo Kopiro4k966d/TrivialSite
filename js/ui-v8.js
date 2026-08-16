@@ -1,6 +1,24 @@
 (() => {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const body = document.body;
+
+  // Elements that should appear independently as the visitor scrolls.
+  const moduleSelectors = [
+    '.feature-row',
+    '.metric-copy',
+    '.metric',
+    '.demo-list > div',
+    '.demo-widget',
+    '.price-card',
+    '.footer-grid > *'
+  ];
+
+  const modules = [...document.querySelectorAll(moduleSelectors.join(','))];
+  modules.forEach((el, index) => {
+    el.setAttribute('data-module-reveal', '');
+    el.style.setProperty('--module-delay', `${(index % 4) * 55}ms`);
+  });
+
   const revealItems = [...document.querySelectorAll('[data-reveal], .reveal')];
   const staggerGroups = [...document.querySelectorAll('[data-stagger]')];
 
@@ -16,27 +34,45 @@
     }
   });
 
-  if (reduceMotion || !('IntersectionObserver' in window)) {
+  const showEverything = () => {
     revealItems.forEach(el => el.classList.add('is-visible'));
     staggerGroups.forEach(el => el.classList.add('is-visible'));
+    modules.forEach(el => el.classList.add('is-module-visible'));
     document.querySelectorAll('.section').forEach(el => el.classList.add('is-section-visible'));
+  };
+
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    showEverything();
   } else {
     body.classList.add('motion-ready');
+
     const revealObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    }, { threshold: .1, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: .12, rootMargin: '0px 0px -10% 0px' });
+
     revealItems.forEach(el => revealObserver.observe(el));
     staggerGroups.forEach(el => revealObserver.observe(el));
+
+    const moduleObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-module-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: .16, rootMargin: '0px 0px -8% 0px' });
+
+    modules.forEach(el => moduleObserver.observe(el));
 
     const sectionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('is-section-visible');
       });
     }, { threshold: .08, rootMargin: '0px 0px -14% 0px' });
+
     document.querySelectorAll('.section').forEach(el => sectionObserver.observe(el));
   }
 
